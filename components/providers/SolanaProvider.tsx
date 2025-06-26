@@ -12,7 +12,6 @@ import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
   TorusWalletAdapter,
-  LedgerWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
 import "@solana/wallet-adapter-react-ui/styles.css";
 
@@ -30,13 +29,12 @@ export const SolanaProvider: FC<SolanaProviderProps> = ({ children }) => {
     return heliusUrl || clusterApiUrl(network);
   }, [network]);
 
-  // Configure wallets
+  // Configure wallets (removed LedgerWalletAdapter to avoid pino-pretty dependency issues)
   const wallets = useMemo(
     () => [
       new PhantomWalletAdapter(),
       new SolflareWalletAdapter(),
       new TorusWalletAdapter(),
-      new LedgerWalletAdapter(),
     ],
     []
   );
