@@ -12,6 +12,23 @@ body {
   }
 }
 
+/* Solana Wallet Adapter Custom Styles */
+.wallet-adapter-button {
+  @apply !bg-primary !text-primary-foreground hover:!bg-primary/90 !h-9 !text-sm !font-medium;
+}
+
+.wallet-adapter-modal-wrapper {
+  @apply !bg-background/80;
+}
+
+.wallet-adapter-modal {
+  @apply !bg-card !text-card-foreground;
+}
+
+.wallet-adapter-modal-list li {
+  @apply hover:!bg-muted;
+}
+
 @layer base {
     :root {
       --background: 0 0% 100%;

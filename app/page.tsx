@@ -3,9 +3,11 @@ import { useState } from "react";
 import { ImageUpload } from "@/components/ImageUpload";
 import { ImagePromptInput } from "@/components/ImagePromptInput";
 import { ImageResultDisplay } from "@/components/ImageResultDisplay";
-import { ImageIcon, Wand2 } from "lucide-react";
+import { ImageIcon } from "lucide-react";
+import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { HistoryItem } from "@/lib/types";
+import { ClientWalletButton } from "@/components/ClientWalletButton";
 
 export default function Home() {
   const [image, setImage] = useState<string | null>(null);
@@ -102,12 +104,23 @@ export default function Home() {
   const displayImage = generatedImage;
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-background p-8">
-      <Card className="w-full max-w-4xl border-0 bg-card shadow-none">
-        <CardHeader className="flex flex-col items-center justify-center space-y-2">
-          <CardTitle className="flex items-center gap-2 text-foreground">
-            <Wand2 className="w-8 h-8 text-primary" />
-            Image Creation & Editing
+    <main className="min-h-screen bg-background p-8">
+      <div className="flex justify-end mb-4">
+        <ClientWalletButton />
+      </div>
+      <div className="flex items-center justify-center">
+        <Card className="w-full max-w-4xl border-0 bg-card shadow-none">
+          <CardHeader className="flex flex-col items-center justify-center space-y-4">
+            <Image
+            src="/gorbagana-logo.png"
+            alt="Gorbagana Logo"
+            width={150}
+            height={150}
+            className="mb-2"
+          />
+          <CardTitle className="flex flex-col items-center gap-2 text-foreground">
+            <span className="text-3xl font-bold">Gorbagana Google Deepmind</span>
+            <span className="text-lg text-muted-foreground">The Sentient Ledger</span>
           </CardTitle>
           <span className="text-sm font-mono text-muted-foreground">
             powered by Google DeepMind Gemini 2.0 Flash
@@ -159,6 +172,7 @@ export default function Home() {
           )}
         </CardContent>
       </Card>
+      </div>
     </main>
   );
 }

@@ -1,7 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Open_Sans } from "next/font/google";
 import "./globals.css";
+import "@solana/wallet-adapter-react-ui/styles.css";
 import { ThemeProviders } from "@/components/providers";
+import { SolanaProvider } from "@/components/providers/SolanaProvider";
 
 const openSans = Open_Sans({
   weight: ["400", "500", "700"],
@@ -11,7 +13,7 @@ const openSans = Open_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Image Editor",
+  title: "Gorbagana Google Deepmind",
   description: "Edit images using Google DeepMind Gemini 2.0",
 };
 
@@ -33,7 +35,9 @@ export default function RootLayout({
         className={`${openSans.className} antialiased bg-white dark:bg-slate-950`}
         suppressHydrationWarning
       >
-        <ThemeProviders>{children}</ThemeProviders>
+        <ThemeProviders>
+          <SolanaProvider>{children}</SolanaProvider>
+        </ThemeProviders>
       </body>
     </html>
   );

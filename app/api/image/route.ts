@@ -3,7 +3,7 @@ import { GoogleGenAI } from "@google/genai";
 import { HistoryItem, HistoryPart } from "@/lib/types";
 
 // Initialize the Google Gen AI client with your API key
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || "";
+const GEMINI_API_KEY = process.env.GOOGLE_GENERATIVE_AI_API_KEY || "";
 const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
 // Define the model ID for Gemini 2.0 Flash experimental
@@ -22,9 +22,9 @@ export async function POST(req: NextRequest) {
   try {
     // Make sure we have an API key configured
     if (!GEMINI_API_KEY) {
-      console.error("GEMINI_API_KEY is not configured");
+      console.error("GOOGLE_GENERATIVE_AI_API_KEY is not configured");
       return NextResponse.json(
-        { success: false, error: "GEMINI_API_KEY is not configured" },
+        { success: false, error: "Google AI API key is not configured. Please set GOOGLE_GENERATIVE_AI_API_KEY in your environment variables." },
         { status: 500 }
       );
     }
