@@ -1,6 +1,6 @@
 "use client";
 
-import { Connection, PublicKey, Transaction, SystemProgram } from "@solana/web3.js";
+import { Connection, PublicKey, Transaction } from "@solana/web3.js";
 import { WalletContextState } from "@solana/wallet-adapter-react";
 import {
   getAssociatedTokenAddress,
@@ -22,7 +22,7 @@ export interface MintNFTWithTokenParams {
 
 // The GOR token mint address on mainnet
 export const GOR_TOKEN_MINT = "71Jvq4Epe2FCJ7JFSF7jLXdNk1Wy4Bhqd9iL6bEFELvg";
-export const NFT_PRICE_IN_GOR = 100; // Price in GOR tokens (adjust as needed)
+export const NFT_PRICE_IN_GOR = 0.1; // Price in GOR tokens (adjusted for testing)
 export const PAYMENT_RECIPIENT = "8bit6v5QJnLp3kq8hRmqxFsQ9vZeJjKpSBxzXjWHqCFh"; // Replace with actual recipient
 
 // Real NFT minting with SPL token payment on Solana mainnet

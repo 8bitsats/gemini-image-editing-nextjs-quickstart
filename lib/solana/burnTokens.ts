@@ -1,13 +1,12 @@
 "use client";
 
-import { Connection, PublicKey, Transaction, SystemProgram, LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { Connection, PublicKey, Transaction, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { WalletContextState } from "@solana/wallet-adapter-react";
 import {
   getAssociatedTokenAddress,
   createBurnCheckedInstruction,
   TOKEN_PROGRAM_ID,
   getAccount,
-  TokenAccount,
 } from "@solana/spl-token";
 
 export interface TokenInfo {
@@ -140,14 +139,8 @@ export async function burnTokens({
       TOKEN_PROGRAM_ID
     );
 
-    // Create SOL reward instruction (from a reward pool or system)
-    // Note: In a real implementation, this would come from a treasury/reward pool
-    const rewardInstruction = SystemProgram.transfer({
-      fromPubkey: wallet.publicKey, // In real app, this would be a reward pool
-      toPubkey: wallet.publicKey,
-      lamports: 0, // Set to 0 for now since we don't have a reward pool
-    });
-
+    // Note: SOL rewards would come from a treasury/reward pool in production
+    
     // Create and send transaction
     const transaction = new Transaction().add(burnInstruction);
     

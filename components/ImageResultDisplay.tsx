@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Download, RotateCcw, MessageCircle, Wallet, Coins } from "lucide-react";
 import { useState } from "react";
+import Image from "next/image";
 import { HistoryItem, HistoryPart } from "@/lib/types";
 import { useNFTMint } from "@/hooks/useNFTMint";
 import { useNFTMintWithToken } from "@/hooks/useNFTMintWithToken";
