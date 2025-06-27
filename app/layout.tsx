@@ -4,6 +4,7 @@ import "./globals.css";
 import "@solana/wallet-adapter-react-ui/styles.css";
 import { ThemeProviders } from "@/components/providers";
 import { SolanaProvider } from "@/components/providers/SolanaProvider";
+import { TokenGate } from "@/components/TokenGate";
 
 const openSans = Open_Sans({
   weight: ["400", "500", "700"],
@@ -36,7 +37,11 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <ThemeProviders>
-          <SolanaProvider>{children}</SolanaProvider>
+          <SolanaProvider>
+            <TokenGate>
+              {children}
+            </TokenGate>
+          </SolanaProvider>
         </ThemeProviders>
       </body>
     </html>
