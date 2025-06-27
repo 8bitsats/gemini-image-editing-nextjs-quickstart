@@ -15,39 +15,42 @@ import {
   ChevronLeft,
   ChevronRight,
   Pause,
-  Play
+  Play,
+  EyeOff
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { useAuth } from "@/lib/auth";
+import { 
+  getPublicImages, 
+  voteOnImage, 
+  removeVote, 
+  getUserVotes,
+  subscribeToPublicImages 
+} from "@/lib/database";
+import type { GeneratedImage } from "@/lib/supabase";
+import { useToast } from "@/components/ui/use-toast";
 
-interface ArtworkItem {
-  id: string;
-  imageUrl: string;
-  prompt: string;
-  createdAt: number;
-  creator: string; // Wallet address or anonymous
-  likes: number;
-  dislikes: number;
-  views: number;
-  isLive?: boolean;
-}
-
-interface Vote {
-  artworkId: string;
-  type: "like" | "dislike";
-  timestamp: number;
+interface ExtendedGeneratedImage extends GeneratedImage {
+  users?: {
+    username?: string;
+    avatar_url?: string;
+  };
+  userVote?: 'upvote' | 'downvote' | null;
 }
 
 export function RealtimeArtGallery() {
-  const [artworks, setArtworks] = useState<ArtworkItem[]>([]);
+  const [artworks, setArtworks] = useState<ExtendedGeneratedImage[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [userVotes, setUserVotes] = useState<Map<string, "like" | "dislike">>(new Map());
+  const [userVotes, setUserVotes] = useState<Map<string, "upvote" | "downvote">>(new Map());
   const [isVisible, setIsVisible] = useState(true);
-  const [liveCount, setLiveCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const galleryRef = useRef<HTMLDivElement>(null);
+  const { user, isAuthenticated } = useAuth();
+  const { toast } = useToast();
 
   // Fetch artworks from API
   const fetchArtworks = async () => {

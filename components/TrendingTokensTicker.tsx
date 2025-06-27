@@ -23,7 +23,8 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { TrendingToken } from "@/lib/types/birdeye";
+import { TrendingToken } from "@/lib/birdeye/client";
+import { TokenDetailsModal } from "./TokenDetailsModal";
 
 interface TrendingTokensData {
   tokens: (TrendingToken & { 
@@ -368,117 +369,10 @@ export function TrendingTokensTicker() {
 
       {/* Token Details Modal */}
       {selectedToken && (
-        <div 
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-          onClick={() => setSelectedToken(null)}
-        >
-          <Card 
-            className="w-full max-w-2xl bg-gradient-to-br from-green-900 to-emerald-900 border-green-500/30"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-16 h-16 rounded-full overflow-hidden bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
-                    {selectedToken.logoURI ? (
-                      <img 
-                        src={selectedToken.logoURI} 
-                        alt={selectedToken.symbol}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <DollarSign className="w-8 h-8 text-white" />
-                    )}
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-bold text-white">{selectedToken.symbol}</h2>
-                    <p className="text-green-200">{selectedToken.name}</p>
-                  </div>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setSelectedToken(null)}
-                  className="text-white hover:bg-white/10"
-                >
-                  ✕
-                </Button>
-              </div>
-
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
-                <div className="text-center p-3 bg-black/20 rounded-lg">
-                  <div className="text-green-200 text-sm">Price</div>
-                  <div className="text-white font-bold text-lg">{formatPrice(selectedToken.price)}</div>
-                </div>
-                <div className="text-center p-3 bg-black/20 rounded-lg">
-                  <div className="text-green-200 text-sm">24h Change</div>
-                  <div className={`font-bold text-lg ${selectedToken.priceChange24h >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                    {selectedToken.priceChange24h >= 0 ? '+' : ''}{selectedToken.priceChange24h.toFixed(2)}%
-                  </div>
-                </div>
-                <div className="text-center p-3 bg-black/20 rounded-lg">
-                  <div className="text-green-200 text-sm">Volume 24h</div>
-                  <div className="text-white font-bold">${formatNumber(selectedToken.volume24h)}</div>
-                </div>
-                <div className="text-center p-3 bg-black/20 rounded-lg">
-                  <div className="text-green-200 text-sm">Market Cap</div>
-                  <div className="text-white font-bold">${formatNumber(selectedToken.marketCap)}</div>
-                </div>
-                <div className="text-center p-3 bg-black/20 rounded-lg">
-                  <div className="text-green-200 text-sm">Holders</div>
-                  <div className="text-white font-bold">{formatNumber(selectedToken.holder)}</div>
-                </div>
-                {selectedToken.rank && (
-                  <div className="text-center p-3 bg-black/20 rounded-lg">
-                    <div className="text-green-200 text-sm">Rank</div>
-                    <div className="text-white font-bold">#{selectedToken.rank}</div>
-                  </div>
-                )}
-              </div>
-
-              <div className="text-center">
-                <div className="text-green-200 text-sm mb-1">Contract Address</div>
-                <div className="text-white font-mono text-sm bg-black/20 p-2 rounded">
-                  {selectedToken.address}
-                </div>
-              </div>
-
-              {selectedToken.extensions?.description && (
-                <div className="mt-4">
-                  <div className="text-green-200 text-sm mb-2">Description</div>
-                  <p className="text-white text-sm">{selectedToken.extensions.description}</p>
-                </div>
-              )}
-
-              {(selectedToken.extensions?.website || selectedToken.extensions?.twitter) && (
-                <div className="flex gap-2 mt-4">
-                  {selectedToken.extensions?.website && (
-                    <a
-                      href={selectedToken.extensions.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1 text-green-200 hover:text-white transition-colors text-sm"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                      Website
-                    </a>
-                  )}
-                  {selectedToken.extensions?.twitter && (
-                    <a
-                      href={selectedToken.extensions.twitter}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1 text-green-200 hover:text-white transition-colors text-sm"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                      Twitter
-                    </a>
-                  )}
-                </div>
-              )}
-            </div>
-          </Card>
-        </div>
+        <TokenDetailsModal 
+          token={selectedToken} 
+          onClose={() => setSelectedToken(null)} 
+        />
       )}
     </>
   );

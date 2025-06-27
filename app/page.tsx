@@ -157,7 +157,7 @@ export default function Home() {
             
             <AnimatedBlurReveal delay={0.2} duration={0.8}>
               <CardTitle className="flex flex-col items-center gap-1 sm:gap-2 text-foreground">
-                <span className="text-2xl sm:text-3xl font-bold text-center">Gorbagana Google Deepmind</span>
+                <span className="text-2xl sm:text-3xl font-bold text-center">Gorbagana Deepmind</span>
                 <span className="text-base sm:text-lg text-muted-foreground text-center">The Sentient Ledger</span>
               </CardTitle>
             </AnimatedBlurReveal>

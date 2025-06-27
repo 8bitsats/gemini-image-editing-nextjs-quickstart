@@ -13,6 +13,7 @@ import { TrendingTokensTicker } from "@/components/TrendingTokensTicker";
 import { DJBoothLauncher } from "@/components/DJBoothLauncher";
 import { GorbaganaComputerLauncher } from "@/components/GorbaganaComputerLauncher";
 import { VoiceWidgetManager } from "@/components/VoiceWidgetManager";
+import { Toaster } from "@/components/ui/toaster";
 
 const openSans = Open_Sans({
   weight: ["400", "500", "700"],
@@ -64,6 +65,7 @@ export default function RootLayout({
               <VoiceWidgetManager />
             </TokenGate>
           </SolanaProvider>
+          <Toaster />
         </ThemeProviders>
       </body>
     </html>
