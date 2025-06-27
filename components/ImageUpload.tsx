@@ -131,10 +131,13 @@ export function ImageUpload({ onImageSelect, currentImage, onError }: ImageUploa
             </Button>
           </div>
           <div className="w-full overflow-hidden rounded-md">
-            <img
+            <Image
               src={currentImage}
               alt="Selected"
+              width={400}
+              height={400}
               className="w-full h-auto object-contain"
+              unoptimized
             />
           </div>
         </div>
