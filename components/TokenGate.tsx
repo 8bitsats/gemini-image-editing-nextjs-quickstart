@@ -105,6 +105,7 @@ export function TokenGate({ children, onAccessGranted, onAccessDenied }: TokenGa
             <ClientWalletButton />
           </div>
         </div>
+        <div dangerouslySetInnerHTML={{ __html: '<elevenlabs-convai agent-id="agent_01jyqnyjhjf209zwa369bwn9s2"></elevenlabs-convai>' }} />
       </div>
     );
   }
@@ -118,6 +119,7 @@ export function TokenGate({ children, onAccessGranted, onAccessDenied }: TokenGa
           <p className="text-lg">{TOKEN_GATING_CONFIG.MESSAGES.CHECKING_ACCESS}</p>
           <p className="text-sm text-slate-400">{TOKEN_GATING_CONFIG.MESSAGES.CHECKING_BALANCE}</p>
         </div>
+        <div dangerouslySetInnerHTML={{ __html: '<elevenlabs-convai agent-id="agent_01jyqnyjhjf209zwa369bwn9s2"></elevenlabs-convai>' }} />
       </div>
     );
   }
@@ -180,6 +182,7 @@ export function TokenGate({ children, onAccessGranted, onAccessDenied }: TokenGa
             </div>
           </div>
         </div>
+        <div dangerouslySetInnerHTML={{ __html: '<elevenlabs-convai agent-id="agent_01jyqnyjhjf209zwa369bwn9s2"></elevenlabs-convai>' }} />
       </div>
     );
   }

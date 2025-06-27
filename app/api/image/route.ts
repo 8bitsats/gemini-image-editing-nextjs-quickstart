@@ -223,6 +223,24 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Add to art gallery
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3003'}/api/art-gallery`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "add_artwork",
+          artworkData: {
+            imageUrl: `data:${mimeType};base64,${imageData}`,
+            prompt: typeof prompt === 'string' ? prompt : 'AI Generated Art',
+            creator: "Anonymous"
+          }
+        })
+      });
+    } catch (galleryError) {
+      console.log("Failed to add to gallery (non-critical):", galleryError);
+    }
+
     // Return the base64 image and description as JSON
     return NextResponse.json({
       success: true,

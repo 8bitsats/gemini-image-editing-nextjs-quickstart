@@ -5,7 +5,14 @@ import { ImagePromptInput } from "@/components/ImagePromptInput";
 import { ImageResultDisplay } from "@/components/ImageResultDisplay";
 import { TrashCompactor } from "@/components/TrashCompactor";
 import { TextToAudio } from "@/components/TextToAudio";
-import { Trash2, Palette, Mic } from "lucide-react";
+import { NFTGallery } from "@/components/NFTGallery";
+import { EnhancedGorbaganaTerminal } from "@/components/EnhancedGorbaganaTerminal";
+import { VideoGeneration } from "@/components/VideoGeneration";
+import { MusicGeneration } from "@/components/MusicGeneration";
+import { CodeGeneration } from "@/components/CodeGeneration";
+import { LiveVoiceChat } from "@/components/LiveVoiceChat";
+import { DocumentStudio } from "@/components/DocumentStudio";
+import { Trash2, Palette, Mic, Images as Gallery, Terminal, Video, Music, Code, Radio, FileText } from "lucide-react";
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,7 +24,7 @@ import { MobileLoadingAnimation } from "@/components/LoadingAnimation";
 import { motion } from "framer-motion";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<'ai-art' | 'trash-compactor' | 'text-to-audio'>('ai-art');
+  const [activeTab, setActiveTab] = useState<'ai-art' | 'trash-compactor' | 'text-to-audio' | 'nft-gallery' | 'ai-terminal' | 'video-generation' | 'music-generation' | 'code-generation' | 'live-voice-chat' | 'document-studio'>('ai-art');
   const [image, setImage] = useState<string | null>(null);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [description, setDescription] = useState<string | null>(null);
@@ -162,30 +169,98 @@ export default function Home() {
             {/* Mobile-optimized Tab Navigation */}
             <AnimatedBlurReveal delay={0.6} duration={0.8}>
               <div className="flex flex-col sm:flex-row gap-2 mt-4 sm:mt-6 w-full px-2 sm:px-0">
-                <Button
-                  variant={activeTab === 'ai-art' ? 'default' : 'outline'}
-                  onClick={() => setActiveTab('ai-art')}
-                  className="flex items-center justify-center gap-2 w-full sm:w-auto py-3 sm:py-2 text-sm sm:text-base"
-                >
-                  <Palette className="w-4 h-4" />
-                  AI Art
-                </Button>
-                <Button
-                  variant={activeTab === 'text-to-audio' ? 'default' : 'outline'}
-                  onClick={() => setActiveTab('text-to-audio')}
-                  className="flex items-center justify-center gap-2 w-full sm:w-auto py-3 sm:py-2 text-sm sm:text-base"
-                >
-                  <Mic className="w-4 h-4" />
-                  Text to Audio
-                </Button>
-                <Button
-                  variant={activeTab === 'trash-compactor' ? 'default' : 'outline'}
-                  onClick={() => setActiveTab('trash-compactor')}
-                  className="flex items-center justify-center gap-2 w-full sm:w-auto py-3 sm:py-2 text-sm sm:text-base"
-                >
-                  <Trash2 className="w-4 h-4" />
-                  Trash
-                </Button>
+                <div className="grid grid-cols-2 sm:flex gap-2 w-full">
+                  <Button
+                    variant={activeTab === 'ai-art' ? 'default' : 'outline'}
+                    onClick={() => setActiveTab('ai-art')}
+                    className="flex items-center justify-center gap-1 sm:gap-2 w-full sm:w-auto py-3 sm:py-2 text-xs sm:text-sm"
+                  >
+                    <Palette className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="hidden sm:inline">AI Art</span>
+                    <span className="sm:hidden">Art</span>
+                  </Button>
+                  <Button
+                    variant={activeTab === 'text-to-audio' ? 'default' : 'outline'}
+                    onClick={() => setActiveTab('text-to-audio')}
+                    className="flex items-center justify-center gap-1 sm:gap-2 w-full sm:w-auto py-3 sm:py-2 text-xs sm:text-sm"
+                  >
+                    <Mic className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="hidden sm:inline">Audio</span>
+                    <span className="sm:hidden">Audio</span>
+                  </Button>
+                  <Button
+                    variant={activeTab === 'video-generation' ? 'default' : 'outline'}
+                    onClick={() => setActiveTab('video-generation')}
+                    className="flex items-center justify-center gap-1 sm:gap-2 w-full sm:w-auto py-3 sm:py-2 text-xs sm:text-sm"
+                  >
+                    <Video className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="hidden sm:inline">Video</span>
+                    <span className="sm:hidden">Video</span>
+                  </Button>
+                  <Button
+                    variant={activeTab === 'music-generation' ? 'default' : 'outline'}
+                    onClick={() => setActiveTab('music-generation')}
+                    className="flex items-center justify-center gap-1 sm:gap-2 w-full sm:w-auto py-3 sm:py-2 text-xs sm:text-sm"
+                  >
+                    <Music className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="hidden sm:inline">Music</span>
+                    <span className="sm:hidden">Music</span>
+                  </Button>
+                  <Button
+                    variant={activeTab === 'code-generation' ? 'default' : 'outline'}
+                    onClick={() => setActiveTab('code-generation')}
+                    className="flex items-center justify-center gap-1 sm:gap-2 w-full sm:w-auto py-3 sm:py-2 text-xs sm:text-sm"
+                  >
+                    <Code className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="hidden sm:inline">Code</span>
+                    <span className="sm:hidden">Code</span>
+                  </Button>
+                  <Button
+                    variant={activeTab === 'live-voice-chat' ? 'default' : 'outline'}
+                    onClick={() => setActiveTab('live-voice-chat')}
+                    className="flex items-center justify-center gap-1 sm:gap-2 w-full sm:w-auto py-3 sm:py-2 text-xs sm:text-sm"
+                  >
+                    <Radio className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="hidden sm:inline">Live Voice</span>
+                    <span className="sm:hidden">Voice</span>
+                  </Button>
+                  <Button
+                    variant={activeTab === 'document-studio' ? 'default' : 'outline'}
+                    onClick={() => setActiveTab('document-studio')}
+                    className="flex items-center justify-center gap-1 sm:gap-2 w-full sm:w-auto py-3 sm:py-2 text-xs sm:text-sm"
+                  >
+                    <FileText className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="hidden sm:inline">Documents</span>
+                    <span className="sm:hidden">Docs</span>
+                  </Button>
+                  <Button
+                    variant={activeTab === 'nft-gallery' ? 'default' : 'outline'}
+                    onClick={() => setActiveTab('nft-gallery')}
+                    className="flex items-center justify-center gap-1 sm:gap-2 w-full sm:w-auto py-3 sm:py-2 text-xs sm:text-sm"
+                  >
+                    <Gallery className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="hidden sm:inline">Gallery</span>
+                    <span className="sm:hidden">NFTs</span>
+                  </Button>
+                  <Button
+                    variant={activeTab === 'ai-terminal' ? 'default' : 'outline'}
+                    onClick={() => setActiveTab('ai-terminal')}
+                    className="flex items-center justify-center gap-1 sm:gap-2 w-full sm:w-auto py-3 sm:py-2 text-xs sm:text-sm"
+                  >
+                    <Terminal className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="hidden sm:inline">Terminal</span>
+                    <span className="sm:hidden">AI</span>
+                  </Button>
+                  <Button
+                    variant={activeTab === 'trash-compactor' ? 'default' : 'outline'}
+                    onClick={() => setActiveTab('trash-compactor')}
+                    className="flex items-center justify-center gap-1 sm:gap-2 w-full sm:w-auto py-3 sm:py-2 text-xs sm:text-sm col-span-2 sm:col-span-1"
+                  >
+                    <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="hidden sm:inline">Trash Compactor</span>
+                    <span className="sm:hidden">Trash</span>
+                  </Button>
+                </div>
               </div>
             </AnimatedBlurReveal>
           </CardHeader>
@@ -243,6 +318,34 @@ export default function Home() {
           ) : activeTab === 'text-to-audio' ? (
             <AnimatedBlurReveal>
               <TextToAudio />
+            </AnimatedBlurReveal>
+          ) : activeTab === 'video-generation' ? (
+            <AnimatedBlurReveal>
+              <VideoGeneration />
+            </AnimatedBlurReveal>
+          ) : activeTab === 'music-generation' ? (
+            <AnimatedBlurReveal>
+              <MusicGeneration />
+            </AnimatedBlurReveal>
+          ) : activeTab === 'code-generation' ? (
+            <AnimatedBlurReveal>
+              <CodeGeneration />
+            </AnimatedBlurReveal>
+          ) : activeTab === 'live-voice-chat' ? (
+            <AnimatedBlurReveal>
+              <LiveVoiceChat />
+            </AnimatedBlurReveal>
+          ) : activeTab === 'document-studio' ? (
+            <AnimatedBlurReveal>
+              <DocumentStudio />
+            </AnimatedBlurReveal>
+          ) : activeTab === 'nft-gallery' ? (
+            <AnimatedBlurReveal>
+              <NFTGallery />
+            </AnimatedBlurReveal>
+          ) : activeTab === 'ai-terminal' ? (
+            <AnimatedBlurReveal>
+              <EnhancedGorbaganaTerminal />
             </AnimatedBlurReveal>
           ) : (
             <AnimatedBlurReveal>

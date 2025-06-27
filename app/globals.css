@@ -99,3 +99,85 @@ h1,h2,h3,h4,h5,h6 {
   @apply text-foreground dark:text-foreground;
 }
 
+/* Google Custom Search Engine Styling */
+.gcse-search {
+  width: 100% !important;
+}
+
+.gsc-search-box {
+  margin-bottom: 0 !important;
+  border: none !important;
+}
+
+.gsc-input {
+  background-color: transparent !important;
+  border: 1px solid hsl(var(--border)) !important;
+  border-radius: 0.5rem !important;
+  padding: 0.5rem 0.75rem !important;
+  font-size: 0.875rem !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+.gsc-input:focus {
+  outline: none !important;
+  border-color: hsl(var(--ring)) !important;
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.2) !important;
+}
+
+.gsc-search-button {
+  background-color: hsl(var(--primary)) !important;
+  border: none !important;
+  border-radius: 0.5rem !important;
+  padding: 0.5rem 1rem !important;
+  margin-left: 0.5rem !important;
+  color: hsl(var(--primary-foreground)) !important;
+  cursor: pointer !important;
+}
+
+.gsc-search-button:hover {
+  background-color: hsl(var(--primary) / 0.9) !important;
+}
+
+.gsc-control-cse {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+.gsc-above-wrapper-area {
+  display: none !important;
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .gsc-input {
+    background-color: hsl(var(--background)) !important;
+    color: hsl(var(--foreground)) !important;
+  }
+}
+
+/* Video Stream Responsive Styling */
+.video-container {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%; /* 1:1 aspect ratio */
+}
+
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 0.5rem;
+}
+
+/* Ensure video scales on mobile */
+@media (max-width: 640px) {
+  .video-container {
+    padding-bottom: 100%; /* Maintain 1:1 on mobile */
+  }
+}
+

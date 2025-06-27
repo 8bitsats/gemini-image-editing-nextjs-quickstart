@@ -6,6 +6,9 @@ import "@solana/wallet-adapter-react-ui/styles.css";
 import { ThemeProviders } from "@/components/providers";
 import { SolanaProvider } from "@/components/providers/SolanaProvider";
 import { TokenGate } from "@/components/TokenGate";
+import { GoogleSearch } from "@/components/GoogleSearch";
+import { VideoStream } from "@/components/VideoStream";
+import { RealtimeArtGallery } from "@/components/RealtimeArtGallery";
 
 const openSans = Open_Sans({
   weight: ["400", "500", "700"],
@@ -37,6 +40,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script async src="https://cse.google.com/cse.js?cx=d2c18e59685a44e25"></script>
+        <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+      </head>
       <body
         className={`${openSans.className} antialiased bg-white dark:bg-slate-950`}
         suppressHydrationWarning
@@ -44,7 +51,11 @@ export default function RootLayout({
         <ThemeProviders>
           <SolanaProvider>
             <TokenGate>
+              <RealtimeArtGallery />
+              <GoogleSearch />
+              <VideoStream />
               {children}
+              <div dangerouslySetInnerHTML={{ __html: '<elevenlabs-convai agent-id="agent_01jyqnyjhjf209zwa369bwn9s2"></elevenlabs-convai>' }} />
             </TokenGate>
           </SolanaProvider>
         </ThemeProviders>
