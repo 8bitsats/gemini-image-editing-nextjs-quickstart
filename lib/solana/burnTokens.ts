@@ -2,12 +2,7 @@
 
 import { Connection, PublicKey, Transaction, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { WalletContextState } from "@solana/wallet-adapter-react";
-import {
-  getAssociatedTokenAddress,
-  createBurnCheckedInstruction,
-  TOKEN_PROGRAM_ID,
-  getAccount,
-} from "@solana/spl-token";
+import { Token, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 
 export interface TokenInfo {
   mint: string;
@@ -100,22 +95,30 @@ export async function burnTokens({
   try {
     const mintPublicKey = new PublicKey(tokenMint);
     
-    // Get user's token account
-    const tokenAccount = await getAssociatedTokenAddress(
+    // Create Token instance
+    const token = new Token(
+      connection,
       mintPublicKey,
-      wallet.publicKey,
-      false,
-      TOKEN_PROGRAM_ID
+      TOKEN_PROGRAM_ID,
+      wallet as any
+    );
+    
+    // Get user's token account
+    const tokenAccount = await Token.getAssociatedTokenAddress(
+      token.associatedProgramId,
+      token.programId,
+      mintPublicKey,
+      wallet.publicKey
     );
 
     // Verify token account exists and has sufficient balance
-    const tokenAccountInfo = await getAccount(
-      connection,
-      tokenAccount,
-      "confirmed",
-      TOKEN_PROGRAM_ID
-    );
+    const tokenAccountInfo = await token.getAccountInfo(tokenAccount);
+    
+    if (!tokenAccountInfo) {
+      throw new Error("Token account not found");
+    }
 
+    // @ts-ignore - amount is a u64 type in old spl-token version
     const currentBalance = Number(tokenAccountInfo.amount);
     const burnAmountWithDecimals = burnAmount * Math.pow(10, decimals);
 
@@ -128,15 +131,14 @@ export async function burnTokens({
     
     console.log(`Burning ${burnAmount} tokens for ${solReward / LAMPORTS_PER_SOL} SOL reward`);
 
-    // Create burn instruction
-    const burnInstruction = createBurnCheckedInstruction(
-      tokenAccount,
+    // Create burn instruction using Token class
+    const burnInstruction = Token.createBurnInstruction(
+      TOKEN_PROGRAM_ID,
       mintPublicKey,
+      tokenAccount,
       wallet.publicKey,
-      burnAmountWithDecimals,
-      decimals,
       [],
-      TOKEN_PROGRAM_ID
+      burnAmountWithDecimals
     );
 
     // Note: SOL rewards would come from a treasury/reward pool in production

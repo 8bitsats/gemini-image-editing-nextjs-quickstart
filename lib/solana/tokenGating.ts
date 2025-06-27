@@ -1,5 +1,5 @@
 import { Connection, PublicKey } from "@solana/web3.js";
-import { getAssociatedTokenAddress, getAccount } from "@solana/spl-token";
+import { Token, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { TOKEN_GATING_CONFIG } from "@/config/tokenGating";
 
 // Export config values for easy access
@@ -83,24 +83,40 @@ export async function getGorTokenBalance(
   walletPubkey: PublicKey
 ): Promise<number> {
   try {
+    // Create a Token instance for the GOR token
+    const token = new Token(
+      connection,
+      GOR_TOKEN_MINT,
+      TOKEN_PROGRAM_ID,
+      null as any // We don't need a payer for read-only operations
+    );
+
     // Get the associated token account address for GOR token
-    const tokenAccountAddress = await getAssociatedTokenAddress(
+    const tokenAccountAddress = await Token.getAssociatedTokenAddress(
+      token.associatedProgramId,
+      token.programId,
       GOR_TOKEN_MINT,
       walletPubkey
     );
 
     // Get the token account info
-    const tokenAccount = await getAccount(connection, tokenAccountAddress);
+    const tokenAccountInfo = await connection.getAccountInfo(tokenAccountAddress);
+    
+    if (!tokenAccountInfo) {
+      // Token account doesn't exist, balance is 0
+      return 0;
+    }
+
+    // Parse the account data to get the balance
+    const tokenAccount = await token.getAccountInfo(tokenAccountAddress);
     
     // Convert balance from lamports to tokens using configured decimals
+    // @ts-ignore - amount is a u64 type in old spl-token version
     const balance = Number(tokenAccount.amount) / Math.pow(10, TOKEN_GATING_CONFIG.TOKEN_DECIMALS);
     return balance;
 
   } catch (error) {
-    // If token account doesn't exist, balance is 0
-    if (error instanceof Error && error.message.includes("could not find account")) {
-      return 0;
-    }
+    // If token account doesn't exist or other error, balance is 0
     console.error("Error fetching GOR balance:", error);
     return 0;
   }

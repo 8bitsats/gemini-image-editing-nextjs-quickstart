@@ -2,12 +2,7 @@
 
 import { Connection, PublicKey, Transaction } from "@solana/web3.js";
 import { WalletContextState } from "@solana/wallet-adapter-react";
-import {
-  getAssociatedTokenAddress,
-  createTransferInstruction,
-  getAccount,
-  TOKEN_PROGRAM_ID,
-} from "@solana/spl-token";
+import { Token, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 
 export interface MintNFTWithTokenParams {
   wallet: WalletContextState;
@@ -45,22 +40,30 @@ export async function mintNFTWithToken({
     const tokenMintPubkey = new PublicKey(tokenMint);
     const recipientPubkey = new PublicKey(recipientAddress);
     
-    // Get user's token account
-    const userTokenAccount = await getAssociatedTokenAddress(
+    // Create Token instance
+    const token = new Token(
+      connection,
       tokenMintPubkey,
-      wallet.publicKey,
-      false,
-      TOKEN_PROGRAM_ID
+      TOKEN_PROGRAM_ID,
+      wallet as any
+    );
+    
+    // Get user's token account
+    const userTokenAccount = await Token.getAssociatedTokenAddress(
+      token.associatedProgramId,
+      token.programId,
+      tokenMintPubkey,
+      wallet.publicKey
     );
 
     // Check user's token balance
-    const userTokenAccountInfo = await getAccount(
-      connection,
-      userTokenAccount,
-      "confirmed",
-      TOKEN_PROGRAM_ID
-    );
+    const userTokenAccountInfo = await token.getAccountInfo(userTokenAccount);
+    
+    if (!userTokenAccountInfo) {
+      throw new Error("User token account not found");
+    }
 
+    // @ts-ignore - amount is a u64 type in old spl-token version
     const userBalance = Number(userTokenAccountInfo.amount);
     console.log(`User GOR balance: ${userBalance}`);
 
@@ -71,21 +74,21 @@ export async function mintNFTWithToken({
     }
 
     // Get recipient's token account
-    const recipientTokenAccount = await getAssociatedTokenAddress(
+    const recipientTokenAccount = await Token.getAssociatedTokenAddress(
+      token.associatedProgramId,
+      token.programId,
       tokenMintPubkey,
-      recipientPubkey,
-      false,
-      TOKEN_PROGRAM_ID
+      recipientPubkey
     );
 
     // Create transfer instruction
-    const transferInstruction = createTransferInstruction(
+    const transferInstruction = Token.createTransferInstruction(
+      TOKEN_PROGRAM_ID,
       userTokenAccount,
       recipientTokenAccount,
       wallet.publicKey,
-      requiredAmount,
       [],
-      TOKEN_PROGRAM_ID
+      requiredAmount
     );
 
     // Create transaction for token payment
@@ -108,18 +111,13 @@ export async function mintNFTWithToken({
 
     // Now proceed with NFT minting
     // Dynamic import Metaplex to avoid SSR issues
-    const { Metaplex, walletAdapterIdentity, toMetaplexFile, bundlrStorage } = await import(
+    const { Metaplex, walletAdapterIdentity, toMetaplexFile } = await import(
       "@metaplex-foundation/js"
     );
 
-    // Initialize Metaplex with wallet adapter and bundlr storage
+    // Initialize Metaplex with wallet adapter (bundlr is deprecated in newer versions)
     const metaplex = Metaplex.make(connection)
-      .use(walletAdapterIdentity(wallet))
-      .use(bundlrStorage({
-        address: "https://node1.bundlr.network",
-        providerUrl: process.env.NEXT_PUBLIC_HELIUS_RPC_URL || "https://api.mainnet-beta.solana.com",
-        timeout: 60000,
-      }));
+      .use(walletAdapterIdentity(wallet));
 
     console.log("Uploading image to decentralized storage...");
     
