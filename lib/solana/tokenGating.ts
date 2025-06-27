@@ -17,8 +17,8 @@ export interface TokenGateResult {
 /**
  * Check if a wallet has access to the application
  * Access is granted if:
- * 1. Wallet is in whitelist, OR
- * 2. Wallet holds minimum GOR tokens
+ * 1. Wallet is in whitelist (required), OR
+ * 2. Wallet holds minimum GOR tokens (if not in whitelist-only mode)
  */
 export async function checkWalletAccess(
   connection: Connection,
@@ -37,7 +37,16 @@ export async function checkWalletAccess(
       };
     }
 
-    // Check GOR token balance
+    // If whitelist-only mode is enabled, deny access for non-whitelisted wallets
+    if (TOKEN_GATING_CONFIG.FEATURES.WHITELIST_ONLY_MODE) {
+      return {
+        hasAccess: false,
+        reason: TOKEN_GATING_CONFIG.MESSAGES.WALLET_NOT_WHITELISTED,
+        isWhitelisted: false
+      };
+    }
+
+    // Check GOR token balance (only if not in whitelist-only mode)
     const gorBalance = await getGorTokenBalance(connection, walletPubkey);
     
     if (gorBalance >= MIN_GOR_BALANCE) {

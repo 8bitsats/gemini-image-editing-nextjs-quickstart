@@ -9,6 +9,9 @@ import { TokenGate } from "@/components/TokenGate";
 import { GoogleSearch } from "@/components/GoogleSearch";
 import { VideoStream } from "@/components/VideoStream";
 import { RealtimeArtGallery } from "@/components/RealtimeArtGallery";
+import { TrendingTokensTicker } from "@/components/TrendingTokensTicker";
+import { DJBoothLauncher } from "@/components/DJBoothLauncher";
+import { GorbaganaComputerLauncher } from "@/components/GorbaganaComputerLauncher";
 
 const openSans = Open_Sans({
   weight: ["400", "500", "700"],
@@ -51,10 +54,13 @@ export default function RootLayout({
         <ThemeProviders>
           <SolanaProvider>
             <TokenGate>
+              <TrendingTokensTicker />
               <RealtimeArtGallery />
               <GoogleSearch />
               <VideoStream />
               {children}
+              <DJBoothLauncher />
+              <GorbaganaComputerLauncher />
               <div dangerouslySetInnerHTML={{ __html: '<elevenlabs-convai agent-id="agent_01jyqnyjhjf209zwa369bwn9s2"></elevenlabs-convai>' }} />
             </TokenGate>
           </SolanaProvider>

@@ -36,24 +36,28 @@ export const TOKEN_GATING_CONFIG = {
     TOKEN_GATING_ENABLED: true,
     
     // Show token balance in UI
-    SHOW_TOKEN_BALANCE: true,
+    SHOW_TOKEN_BALANCE: false,
     
     // Allow recheck of access
     ALLOW_RECHECK: true,
     
     // Show access status banner when granted
     SHOW_ACCESS_BANNER: true,
+    
+    // Whitelist-only mode (ignore token balance, only check whitelist)
+    WHITELIST_ONLY_MODE: true,
   },
   
   // UI Messages
   MESSAGES: {
     ACCESS_REQUIRED_TITLE: "Gorbagana Access Required",
-    ACCESS_REQUIRED_DESCRIPTION: "Connect your wallet to verify access to the AI image generation platform",
+    ACCESS_REQUIRED_DESCRIPTION: "Connect your whitelisted wallet to access the platform",
     ACCESS_DENIED_TITLE: "Access Denied",
-    INSUFFICIENT_TOKENS: "Insufficient $GOR token balance",
+    INSUFFICIENT_TOKENS: "Wallet not whitelisted for platform access",
     VERIFICATION_ERROR: "Failed to verify wallet access",
-    CHECKING_ACCESS: "Verifying access...",
-    CHECKING_BALANCE: "Checking your $GOR token balance",
+    CHECKING_ACCESS: "Verifying wallet whitelist status...",
+    CHECKING_BALANCE: "Checking wallet permissions",
+    WALLET_NOT_WHITELISTED: "Your wallet address is not authorized to access this platform",
   }
 };
 

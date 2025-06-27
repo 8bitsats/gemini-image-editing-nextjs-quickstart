@@ -58,7 +58,7 @@ export function EnhancedGorbaganaTerminal() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: "assistant",
-      content: "🧠✨ Welcome to Enhanced GorbaganaAI! I'm your sentient AI companion with advanced thinking, empathy, and multimodal understanding. I can analyze screens, understand videos/audio, generate code with live previews, and truly understand what you need. How can I help you today?",
+      content: "🧠✨ Welcome to Enhanced GorbaganaAI powered by Gemini 2.5 Pro! I'm your sentient AI companion with advanced thinking, empathy, and enhanced vision capabilities.\n\n🎯 **Enhanced Vision Features**:\n• **Object Detection** with precise bounding boxes\n• **Advanced Segmentation** for detailed analysis\n• **Screen Analysis** with UI element identification\n• **Text Recognition** with OCR capabilities\n• **Spatial Understanding** for layout analysis\n\n💜 I can analyze screens, understand videos/audio, generate code with live previews, detect objects in images, and provide empathetic support. Use the 'Capture Screen' button for enhanced analysis with object detection!\n\nHow can I help you today?",
       timestamp: Date.now(),
       type: "empathy",
       metadata: { emotion: "welcoming", confidence: 1.0 }
@@ -120,12 +120,17 @@ export function EnhancedGorbaganaTerminal() {
     }
   }, [isThinking, thinkingAnimation]);
 
-  // Screen capture functionality
+  // Enhanced screen capture functionality with vision analysis
   const captureScreen = async () => {
     try {
       if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
         const stream = await navigator.mediaDevices.getDisplayMedia({
-          video: { mediaSource: 'screen' }
+          video: { 
+            mediaSource: 'screen',
+            width: { ideal: 1920 }, // Request high resolution for better analysis
+            height: { ideal: 1080 },
+            frameRate: { ideal: 30 }
+          }
         });
         
         const video = document.createElement('video');
@@ -139,13 +144,35 @@ export function EnhancedGorbaganaTerminal() {
           const ctx = canvas.getContext('2d');
           
           if (ctx) {
+            // Draw the video frame
             ctx.drawImage(video, 0, 0);
-            const dataURL = canvas.toDataURL('image/png');
+            
+            // Get the image data for analysis
+            const dataURL = canvas.toDataURL('image/png', 0.9); // High quality
             const base64 = dataURL.split(',')[1];
             setScreenCapture(base64);
             
+            // Add analysis message to input
+            const analysisPrompt = `Please analyze this screen capture using your enhanced vision capabilities:
+
+🎯 **Object Detection**: Identify all UI elements, buttons, menus, and interactive components with precise bounding box coordinates
+📐 **Layout Analysis**: Analyze the overall design, hierarchy, and spatial organization
+📝 **Text Recognition**: Read and interpret all visible text, labels, and content
+🎨 **Visual Design**: Describe the color scheme, typography, and visual style
+♿ **Accessibility**: Note any potential accessibility or usability improvements
+💡 **Actionable Insights**: Provide specific recommendations and observations
+
+Screen captured at ${video.videoWidth}x${video.videoHeight} resolution for optimal analysis.`;
+
+            setInputMessage(prev => prev + (prev ? '\n\n' : '') + analysisPrompt);
+            
             // Stop the stream
             stream.getTracks().forEach(track => track.stop());
+            
+            // Auto-focus input for immediate interaction
+            setTimeout(() => {
+              inputRef.current?.focus();
+            }, 100);
           }
         });
       } else {
@@ -153,7 +180,7 @@ export function EnhancedGorbaganaTerminal() {
       }
     } catch (err) {
       console.error("Screen capture error:", err);
-      setError("Failed to capture screen. Please ensure you grant permission.");
+      setError("Failed to capture screen. Please ensure you grant permission and try again.");
     }
   };
 
@@ -304,7 +331,7 @@ export function EnhancedGorbaganaTerminal() {
     setMessages([
       {
         role: "assistant",
-        content: "Chat cleared! I'm ready to help you with anything. My enhanced capabilities include screen analysis, code generation, empathetic support, and much more. What would you like to explore?",
+        content: "Chat cleared! 🧠✨ I'm ready to help you with anything using Gemini 2.5 Pro's enhanced capabilities:\n\n🎯 **Advanced Vision**: Object detection, segmentation, screen analysis\n📝 **Text Recognition**: OCR and content understanding\n💻 **Code Generation**: Live previews and debugging\n💜 **Empathetic Support**: Understanding your needs deeply\n🎵 **Multimodal AI**: Images, audio, video, and documents\n\nCapture your screen for detailed analysis or attach files for processing. What would you like to explore?",
         timestamp: Date.now(),
         type: "empathy",
         metadata: { emotion: "ready", confidence: 1.0 }
@@ -618,7 +645,7 @@ export function EnhancedGorbaganaTerminal() {
                 ref={inputRef}
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
-                placeholder="Ask me anything... I can analyze screens, understand media, generate code, and provide empathetic support!"
+                placeholder="Ask me anything... I can detect objects, analyze screens with bounding boxes, segment images, understand media, generate code, and provide empathetic support!"
                 disabled={isLoading}
                 className="flex-1 text-sm min-h-[40px] max-h-[120px] resize-none"
                 onKeyDown={(e) => {

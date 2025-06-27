@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Disc3, Music } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { DJBooth } from "./DJBooth";
+import { DJBoothAdvanced } from "./DJBoothAdvanced";
 
 export function DJBoothLauncher() {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,7 +31,7 @@ export function DJBoothLauncher() {
       </motion.div>
 
       {/* DJ Booth Modal */}
-      <DJBooth isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <DJBoothAdvanced isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </>
   );
 }
