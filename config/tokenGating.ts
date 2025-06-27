@@ -13,8 +13,9 @@ export const TOKEN_GATING_CONFIG = {
   
   // Whitelisted wallet addresses (full access regardless of token balance)
   WHITELISTED_WALLETS: [
-    // Add wallet addresses here
-    // Example: "YourWalletAddressHere...",
+    "7JnwzvqrLGH5ZkEGjY8VwiwYrNd8cyF7orgPRVSPzRW5",
+    "BSg4ZyMunJKr585bUQTwQpigX4Em8iiCqVSHMxnZVz1u", 
+    "4rFMYypvtG5rCzEaiCfqtYnAHshdzECrfdBrGMc35K2J",
   ],
   
   // Admin wallet addresses (can modify whitelist)

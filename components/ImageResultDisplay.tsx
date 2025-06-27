@@ -67,22 +67,23 @@ export function ImageResultDisplay({
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Generated Image</h2>
-        <div className="space-x-2">
+    <div className="space-y-3 sm:space-y-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
+        <h2 className="text-lg sm:text-xl font-semibold">Generated Image</h2>
+        <div className="flex flex-wrap gap-2 w-full sm:w-auto">
           {!isConnected && (
             <ClientWalletButton />
           )}
           {isConnected && (
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
               <Button 
                 variant="outline" 
                 size="sm" 
                 onClick={handleMintNFT}
                 disabled={isMinting || isMintingWithToken}
+                className="w-full sm:w-auto text-xs sm:text-sm py-2"
               >
-                <Wallet className="w-4 h-4 mr-2" />
+                <Wallet className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                 {isMinting ? "Minting..." : "Mint with SOL"}
               </Button>
               <Button 
@@ -90,69 +91,72 @@ export function ImageResultDisplay({
                 size="sm" 
                 onClick={handleMintWithToken}
                 disabled={isMinting || isMintingWithToken}
-                className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+                className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 w-full sm:w-auto text-xs sm:text-sm py-2"
               >
-                <Coins className="w-4 h-4 mr-2" />
+                <Coins className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                 {isMintingWithToken ? "Minting..." : `Mint with ${tokenPrice} $GOR`}
               </Button>
             </div>
           )}
-          <Button variant="outline" size="sm" onClick={handleDownload}>
-            <Download className="w-4 h-4 mr-2" />
-            Download
+          <Button variant="outline" size="sm" onClick={handleDownload} className="text-xs sm:text-sm py-2">
+            <Download className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+            <span className="hidden sm:inline">Download</span>
+            <span className="sm:hidden">Save</span>
           </Button>
           {conversationHistory.length > 0 && (
-            <Button variant="outline" size="sm" onClick={toggleHistory}>
-              <MessageCircle className="w-4 h-4 mr-2" />
-              {showHistory ? "Hide History" : "Show History"}
+            <Button variant="outline" size="sm" onClick={toggleHistory} className="text-xs sm:text-sm py-2">
+              <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">{showHistory ? "Hide History" : "Show History"}</span>
+              <span className="sm:hidden">History</span>
             </Button>
           )}
-          <Button variant="outline" size="sm" onClick={onReset}>
-            <RotateCcw className="w-4 h-4 mr-2" />
-            Create New Image
+          <Button variant="outline" size="sm" onClick={onReset} className="text-xs sm:text-sm py-2">
+            <RotateCcw className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+            <span className="hidden sm:inline">Create New Image</span>
+            <span className="sm:hidden">New</span>
           </Button>
         </div>
       </div>
 
-      <div className="rounded-lg overflow-hidden bg-muted p-2">
+      <div className="rounded-lg overflow-hidden bg-muted p-1 sm:p-2">
         <Image
           src={imageUrl}
           alt={description || "Generated image"}
           width={640}
           height={640}
-          className="max-w-[640px] h-auto mx-auto"
+          className="w-full max-w-full sm:max-w-[640px] h-auto mx-auto"
           unoptimized
         />
       </div>
 
       {description && (
-        <div className="p-4 rounded-lg bg-muted">
-          <h3 className="text-sm font-medium mb-2">Description</h3>
-          <p className="text-sm text-muted-foreground">{description}</p>
+        <div className="p-3 sm:p-4 rounded-lg bg-muted">
+          <h3 className="text-xs sm:text-sm font-medium mb-1 sm:mb-2">Description</h3>
+          <p className="text-xs sm:text-sm text-muted-foreground">{description}</p>
         </div>
       )}
 
       {(mintError || mintWithTokenError) && (
-        <div className="p-4 rounded-lg bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800">
-          <p className="text-sm text-red-700 dark:text-red-300">Error: {mintError || mintWithTokenError}</p>
+        <div className="p-3 sm:p-4 rounded-lg bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800">
+          <p className="text-xs sm:text-sm text-red-700 dark:text-red-300">Error: {mintError || mintWithTokenError}</p>
         </div>
       )}
 
       {mintSuccess && showMintDialog && (
-        <div className="p-4 rounded-lg bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800">
-          <h3 className="text-sm font-medium mb-2 text-green-700 dark:text-green-300">NFT Minted Successfully with SOL!</h3>
-          <p className="text-sm text-green-600 dark:text-green-400 mb-1">
+        <div className="p-3 sm:p-4 rounded-lg bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800">
+          <h3 className="text-xs sm:text-sm font-medium mb-1 sm:mb-2 text-green-700 dark:text-green-300">NFT Minted Successfully with SOL!</h3>
+          <p className="text-xs sm:text-sm text-green-600 dark:text-green-400 mb-1">
             Mint address: <code className="text-xs break-all">{mintSuccess.mint}</code>
           </p>
-          <p className="text-sm text-green-600 dark:text-green-400 mb-1">
+          <p className="text-xs sm:text-sm text-green-600 dark:text-green-400 mb-1">
             Name: {mintSuccess.name}
           </p>
-          <div className="flex gap-2 mt-3">
+          <div className="flex flex-col sm:flex-row gap-2 mt-2 sm:mt-3">
             <a 
               href={`https://solscan.io/token/${mintSuccess.mint}?cluster=mainnet`} 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-sm underline hover:no-underline text-green-600 dark:text-green-400"
+              className="text-xs sm:text-sm underline hover:no-underline text-green-600 dark:text-green-400"
             >
               View on Solscan →
             </a>
@@ -205,13 +209,13 @@ export function ImageResultDisplay({
       )}
 
       {showHistory && conversationHistory.length > 0 && (
-        <div className="p-4 rounded-lg">
-          <h3 className="text-sm font-medium mb-4">Conversation History</h3>
-          <div className="space-y-4">
+        <div className="p-3 sm:p-4 rounded-lg">
+          <h3 className="text-xs sm:text-sm font-medium mb-3 sm:mb-4">Conversation History</h3>
+          <div className="space-y-3 sm:space-y-4 max-h-[300px] sm:max-h-[400px] overflow-y-auto">
             {conversationHistory.map((item, index) => (
-              <div key={index} className={`p-3 rounded-lg bg-secondary`}>
+              <div key={index} className={`p-2 sm:p-3 rounded-lg bg-secondary`}>
                 <p
-                  className={`text-sm font-medium mb-2 ${
+                  className={`text-xs sm:text-sm font-medium mb-1 sm:mb-2 ${
                     item.role === "user" ? "text-foreground" : "text-primary"
                   }`}
                 >
@@ -220,7 +224,7 @@ export function ImageResultDisplay({
                 <div className="space-y-2">
                   {item.parts.map((part: HistoryPart, partIndex) => (
                     <div key={partIndex}>
-                      {part.text && <p className="text-sm">{part.text}</p>}
+                      {part.text && <p className="text-xs sm:text-sm break-words">{part.text}</p>}
                       {part.image && (
                         <div className="mt-2 overflow-hidden rounded-md">
                           <Image
@@ -228,7 +232,7 @@ export function ImageResultDisplay({
                             alt={`Image shared by ${item.role}`}
                             width={256}
                             height={256}
-                            className="max-w-[16rem] h-auto object-contain"
+                            className="max-w-[12rem] sm:max-w-[16rem] h-auto object-contain"
                             unoptimized
                           />
                         </div>

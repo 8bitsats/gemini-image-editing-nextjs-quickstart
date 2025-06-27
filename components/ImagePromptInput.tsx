@@ -27,9 +27,9 @@ export function ImagePromptInput({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 rounded-lg">
-      <div className="space-y-2">
-        <p className="text-sm font-medium text-foreground">
+    <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4 rounded-lg">
+      <div className="space-y-1 sm:space-y-2">
+        <p className="text-xs sm:text-sm font-medium text-foreground">
           {isEditing
             ? "Describe how you want to edit the image"
             : "Describe the image you want to generate"}
@@ -38,11 +38,11 @@ export function ImagePromptInput({
 
       <Input
         id="prompt"
-        className="border-secondary"
+        className="border-secondary text-sm sm:text-base py-3 sm:py-2"
         placeholder={
           isEditing
-            ? "Example: Make the background blue and add a rainbow..."
-            : "Example: A 3D rendered image of a pig with wings and a top hat flying over a futuristic city..."
+            ? "Make it more colorful..."
+            : "A futuristic cityscape..."
         }
         value={prompt}
         onChange={(e) => setPrompt(e.target.value)}
@@ -51,7 +51,7 @@ export function ImagePromptInput({
       <Button
         type="submit"
         disabled={!prompt.trim() || isLoading}
-        className="w-full bg-primary hover:bg-primary/90"
+        className="w-full bg-primary hover:bg-primary/90 py-5 sm:py-2 text-sm sm:text-base font-medium"
       >
         <Wand2 className="w-4 h-4 mr-2" />
         {isEditing ? "Edit Image" : "Generate Image"}

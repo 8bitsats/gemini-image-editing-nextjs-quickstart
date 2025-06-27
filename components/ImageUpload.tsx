@@ -85,33 +85,33 @@ export function ImageUpload({ onImageSelect, currentImage, onError }: ImageUploa
       {!currentImage ? (
         <div
           {...getRootProps()}
-          className={`min-h-[150px] p-4 rounded-lg
+          className={`min-h-[120px] sm:min-h-[150px] p-4 rounded-lg
           ${isDragActive ? "bg-secondary/50" : "bg-secondary"}
           ${isLoading ? "opacity-50 cursor-wait" : ""}
           transition-colors duration-200 ease-in-out hover:bg-secondary/50
           border-2 border-dashed border-secondary
-          cursor-pointer flex items-center justify-center gap-4
+          cursor-pointer flex items-center justify-center gap-2 sm:gap-4
         `}
         >
           <input {...getInputProps()} />
-          <div className="flex flex-row items-center" role="presentation">
-            <UploadIcon className="w-8 h-8 text-primary mr-3 flex-shrink-0" aria-hidden="true" />
+          <div className="flex flex-col sm:flex-row items-center text-center sm:text-left" role="presentation">
+            <UploadIcon className="w-10 h-10 sm:w-8 sm:h-8 text-primary mb-2 sm:mb-0 sm:mr-3 flex-shrink-0" aria-hidden="true" />
             <div className="">
-              <p className="text-sm font-medium text-foreground">
-                Drop your image here or click to browse
+              <p className="text-xs sm:text-sm font-medium text-foreground">
+                Tap to select or drop image
               </p>
-              <p className="text-xs text-muted-foreground">
-                Maximum file size: 10MB
+              <p className="text-xs text-muted-foreground mt-1">
+                Max size: 10MB
               </p>
             </div>
           </div>
         </div>
       ) : (
-        <div className="flex flex-col items-center p-4 rounded-lg bg-secondary">
-          <div className="flex w-full items-center mb-4">
-            <ImageIcon className="w-8 h-8 text-primary mr-3 flex-shrink-0" aria-hidden="true" />
+        <div className="flex flex-col items-center p-3 sm:p-4 rounded-lg bg-secondary">
+          <div className="flex w-full items-center mb-3 sm:mb-4">
+            <ImageIcon className="w-6 h-6 sm:w-8 sm:h-8 text-primary mr-2 sm:mr-3 flex-shrink-0" aria-hidden="true" />
             <div className="flex-grow min-w-0">
-              <p className="text-sm font-medium truncate text-foreground">
+              <p className="text-xs sm:text-sm font-medium truncate text-foreground">
                 {selectedFile?.name || "Current Image"}
               </p>
               {selectedFile && (
@@ -124,9 +124,9 @@ export function ImageUpload({ onImageSelect, currentImage, onError }: ImageUploa
               variant="ghost"
               size="icon"
               onClick={handleRemove}
-              className="flex-shrink-0 ml-2"
+              className="flex-shrink-0 ml-2 h-8 w-8 sm:h-9 sm:w-9"
             >
-              <X className="w-4 h-4" />
+              <X className="w-3 h-3 sm:w-4 sm:h-4" />
               <span className="sr-only">Remove image</span>
             </Button>
           </div>
@@ -136,7 +136,7 @@ export function ImageUpload({ onImageSelect, currentImage, onError }: ImageUploa
               alt="Selected"
               width={400}
               height={400}
-              className="w-full h-auto object-contain"
+              className="w-full h-auto object-contain max-h-[300px] sm:max-h-[400px]"
               unoptimized
             />
           </div>

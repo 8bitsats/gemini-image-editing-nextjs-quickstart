@@ -1,0 +1,65 @@
+/* Mobile-specific optimizations */
+@media (max-width: 640px) {
+  /* Better touch targets */
+  button, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Prevent horizontal scroll */
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Better spacing for mobile */
+  .mobile-safe-area {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Smoother animations on mobile */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Better text selection */
+  ::selection {
+    background-color: rgba(59, 130, 246, 0.3);
+  }
+
+  /* Optimize image loading */
+  img {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Better focus states for mobile */
+  *:focus {
+    outline: 2px solid rgba(59, 130, 246, 0.5);
+    outline-offset: 2px;
+  }
+
+  /* Prevent zoom on input focus */
+  input, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Animation performance optimizations */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

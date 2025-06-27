@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Open_Sans } from "next/font/google";
 import "./globals.css";
+import "./mobile.css";
 import "@solana/wallet-adapter-react-ui/styles.css";
 import { ThemeProviders } from "@/components/providers";
 import { SolanaProvider } from "@/components/providers/SolanaProvider";
@@ -23,6 +24,10 @@ export const viewport: Viewport = {
     { media: "(prefers-color-scheme: light)", color: "white" },
     { media: "(prefers-color-scheme: dark)", color: "black" },
   ],
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
