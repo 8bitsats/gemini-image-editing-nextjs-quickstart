@@ -22,10 +22,12 @@ import {
   Terminal, 
   Trash2, 
   Sparkles,
-  Wallet
+  Wallet,
+  MessageCircle,
+  Shield
 } from "lucide-react";
 
-type ActiveTab = 'ai-art' | 'trash-compactor' | 'text-to-audio' | 'nft-gallery' | 'ai-terminal' | 'video-generation' | 'music-generation' | 'code-generation' | 'live-voice-chat' | 'document-studio' | 'nft-studio' | 'voice-wallet';
+type ActiveTab = 'ai-art' | 'trash-compactor' | 'text-to-audio' | 'nft-gallery' | 'ai-terminal' | 'video-generation' | 'music-generation' | 'code-generation' | 'live-voice-chat' | 'document-studio' | 'nft-studio' | 'voice-wallet' | 'ask-the-dev' | 'admin-dashboard';
 
 interface AppMenuItem {
   id: ActiveTab;
@@ -47,6 +49,8 @@ const APP_MENU_ITEMS: AppMenuItem[] = [
   { id: 'document-studio', name: 'Document Studio', shortName: 'Docs', icon: <FileText className="w-4 h-4" />, category: 'Productivity' },
   { id: 'nft-gallery', name: 'NFT Gallery', shortName: 'Gallery', icon: <Gallery className="w-4 h-4" />, category: 'Blockchain' },
   { id: 'nft-studio', name: 'NFT Studio', shortName: 'NFT Studio', icon: <Sparkles className="w-4 h-4" />, category: 'Blockchain' },
+  { id: 'ask-the-dev', name: 'Ask the Dev', shortName: 'Ask Dev', icon: <MessageCircle className="w-4 h-4" />, category: 'Support' },
+  { id: 'admin-dashboard', name: 'Admin Dashboard', shortName: 'Admin', icon: <Shield className="w-4 h-4" />, category: 'Support' },
   { id: 'trash-compactor', name: 'Trash Compactor', shortName: 'Trash', icon: <Trash2 className="w-4 h-4" />, category: 'Utilities' },
 ];
 

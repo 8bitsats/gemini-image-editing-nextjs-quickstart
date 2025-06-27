@@ -13,7 +13,8 @@ This document provides an exhaustive overview of all features, capabilities, and
 5. [🛡️ Security & Access Control](#security--access-control)
 6. [📱 User Experience Features](#user-experience-features)
 7. [🔧 Developer & Advanced Features](#developer--advanced-features)
-8. [📊 Analytics & Monitoring](#analytics--monitoring)
+8. [💬 Support & Communication](#support--communication)
+9. [📊 Analytics & Monitoring](#analytics--monitoring)
 
 ---
 
@@ -829,6 +830,220 @@ interface NotificationSystem {
   };
 }
 ```
+
+---
+
+## 💬 Support & Communication
+
+### 🆕 **Ask the Dev System**
+
+**Technology**: Supabase database with wallet authentication and real-time responses
+
+#### Comprehensive Support Infrastructure
+```typescript
+interface SupportSystem {
+  userInterface: {
+    requestSubmission: boolean;
+    fileUploadSupport: boolean;
+    categorySelection: boolean;
+    priorityLevels: boolean;
+    statusTracking: boolean;
+  };
+  adminDashboard: {
+    requestManagement: boolean;
+    responseSystem: boolean;
+    statusUpdates: boolean;
+    fileViewing: boolean;
+    bulkOperations: boolean;
+  };
+  authentication: {
+    walletBased: boolean;
+    adminWalletVerification: boolean;
+    secureRequestTracking: boolean;
+  };
+}
+```
+
+#### Request Categories & Priority System
+```typescript
+interface RequestManagement {
+  categories: {
+    bug: 'Bug reports and technical issues';
+    feature: 'New feature requests and enhancements';
+    question: 'General questions and help requests';
+    feedback: 'User feedback and suggestions';
+    other: 'Miscellaneous requests';
+  };
+  priorities: {
+    low: 'Non-urgent requests';
+    medium: 'Standard priority (default)';
+    high: 'Important issues requiring attention';
+    urgent: 'Critical issues needing immediate action';
+  };
+  status: {
+    open: 'Newly submitted, awaiting review';
+    in_progress: 'Being actively worked on';
+    resolved: 'Issue addressed and resolved';
+    closed: 'Request completed or archived';
+  };
+}
+```
+
+#### User Experience Features
+- **Wallet Authentication**: Secure request submission using Solana wallet
+- **File Attachments**: Upload screenshots, logs, documents, and images
+- **Real-time Status Updates**: Track request progress from submission to resolution
+- **Response Notifications**: Immediate notification when admin responds
+- **Request History**: View all previous requests and responses
+- **Anonymous Option**: Submit requests without revealing wallet identity (future)
+
+#### Admin Dashboard Capabilities
+```typescript
+interface AdminDashboard {
+  requestViewing: {
+    allRequests: boolean;
+    filterByStatus: boolean;
+    filterByCategory: boolean;
+    filterByPriority: boolean;
+    searchRequests: boolean;
+  };
+  responseManagement: {
+    directResponse: boolean;
+    statusUpdates: boolean;
+    internalNotes: boolean; // Future feature
+    responseTemplates: boolean; // Future feature
+  };
+  analytics: {
+    requestMetrics: boolean;
+    responseTimeTracking: boolean;
+    userSatisfaction: boolean; // Future feature
+    categoryTrends: boolean;
+  };
+}
+```
+
+#### Security & Privacy Features
+- **Admin Wallet Verification**: Only designated wallet (`BSg4ZyMunJKr585bUQTwQpigX4Em8iiCqVSHMxnZVz1u`) can access admin functions
+- **Row Level Security**: Database-level protection preventing unauthorized access
+- **Data Encryption**: All sensitive data encrypted at rest and in transit
+- **Audit Logging**: Complete audit trail of all admin actions and responses
+- **Privacy Controls**: Users control visibility of their contact information
+
+#### Database Schema
+```sql
+-- Core request tracking
+CREATE TABLE dev_requests (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  user_wallet_address TEXT NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
+  category dev_request_category NOT NULL,
+  priority dev_request_priority DEFAULT 'medium',
+  status dev_request_status DEFAULT 'open',
+  url TEXT,
+  metadata JSONB,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- File attachment support
+CREATE TABLE dev_request_files (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  request_id UUID REFERENCES dev_requests(id) ON DELETE CASCADE,
+  file_name TEXT NOT NULL,
+  file_url TEXT NOT NULL,
+  file_type TEXT NOT NULL,
+  file_size BIGINT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Admin response system
+CREATE TABLE dev_responses (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  request_id UUID REFERENCES dev_requests(id) ON DELETE CASCADE,
+  admin_wallet_address TEXT NOT NULL,
+  response_text TEXT NOT NULL,
+  is_admin BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+```
+
+#### API Endpoints
+```typescript
+// User request submission
+POST /api/ask-the-dev
+FormData: {
+  title: string;
+  description: string;
+  category: 'bug' | 'feature' | 'question' | 'feedback' | 'other';
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  url?: string;
+  userWalletAddress: string;
+  file_0?: File;
+  file_1?: File;
+  // ... additional files
+}
+
+// Retrieve user's requests
+GET /api/ask-the-dev?wallet={user_wallet_address}
+
+// Admin: Get all requests
+GET /api/ask-the-dev/admin?admin_wallet={admin_wallet_address}
+
+// Admin: Respond to request
+POST /api/ask-the-dev/admin
+Body: {
+  adminWallet: string;
+  requestId: string;
+  responseText: string;
+  updateStatus?: 'open' | 'in_progress' | 'resolved' | 'closed';
+}
+
+// Admin: Update request status
+PATCH /api/ask-the-dev/admin
+Body: {
+  adminWallet: string;
+  requestId: string;
+  status: 'open' | 'in_progress' | 'resolved' | 'closed';
+}
+```
+
+#### Integration Features
+- **Platform Integration**: Seamlessly integrated into main application dropdown menu
+- **Notification System**: Real-time notifications for new requests and responses
+- **Email Integration**: Optional email notifications for admins (future feature)
+- **Discord Integration**: Optional Discord webhook notifications (future feature)
+- **Analytics Integration**: Request metrics integrated into platform analytics
+
+#### Best Practices & Guidelines
+```typescript
+interface SupportGuidelines {
+  userGuidelines: {
+    clearTitles: 'Use descriptive, specific titles';
+    detailedDescriptions: 'Provide comprehensive problem descriptions';
+    relevantFiles: 'Attach screenshots, logs, or related files';
+    appropriateCategory: 'Select the most relevant category';
+    respectfulCommunication: 'Maintain professional, respectful tone';
+  };
+  adminGuidelines: {
+    timelyResponses: 'Respond within 24-48 hours when possible';
+    helpfulAnswers: 'Provide actionable, detailed responses';
+    statusUpdates: 'Keep request status current and accurate';
+    escalationProcess: 'Route complex issues to appropriate team members';
+    documentationUpdates: 'Update documentation based on common questions';
+  };
+}
+```
+
+#### Future Enhancements
+- **AI-Powered Categorization**: Automatic request categorization using AI
+- **Smart Response Suggestions**: AI-generated response templates
+- **Video Support**: Screen recording and video file attachments
+- **Live Chat Option**: Real-time chat for urgent issues
+- **Multi-language Support**: Support for non-English requests
+- **Integration with Project Management**: Automatic ticket creation in development tools
 
 ---
 

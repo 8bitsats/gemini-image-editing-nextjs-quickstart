@@ -23,10 +23,12 @@ import { AnimatedBlurReveal } from "@/components/AnimatedBlurReveal";
 import { AnimatedReveal } from "@/components/AnimatedReveal";
 import { MobileLoadingAnimation } from "@/components/LoadingAnimation";
 import { AppDropdownMenu } from "@/components/AppDropdownMenu";
+import { AskTheDev } from "@/components/AskTheDev";
+import { AdminDashboard } from "@/components/AdminDashboard";
 import { motion } from "framer-motion";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<'ai-art' | 'trash-compactor' | 'text-to-audio' | 'nft-gallery' | 'ai-terminal' | 'video-generation' | 'music-generation' | 'code-generation' | 'live-voice-chat' | 'document-studio' | 'nft-studio' | 'voice-wallet'>('ai-art');
+  const [activeTab, setActiveTab] = useState<'ai-art' | 'trash-compactor' | 'text-to-audio' | 'nft-gallery' | 'ai-terminal' | 'video-generation' | 'music-generation' | 'code-generation' | 'live-voice-chat' | 'document-studio' | 'nft-studio' | 'voice-wallet' | 'ask-the-dev' | 'admin-dashboard'>('ai-art');
   const [image, setImage] = useState<string | null>(null);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [description, setDescription] = useState<string | null>(null);
@@ -268,6 +270,14 @@ export default function Home() {
           ) : activeTab === 'voice-wallet' ? (
             <AnimatedBlurReveal>
               <VoiceWalletConnect />
+            </AnimatedBlurReveal>
+          ) : activeTab === 'ask-the-dev' ? (
+            <AnimatedBlurReveal>
+              <AskTheDev />
+            </AnimatedBlurReveal>
+          ) : activeTab === 'admin-dashboard' ? (
+            <AnimatedBlurReveal>
+              <AdminDashboard />
             </AnimatedBlurReveal>
           ) : (
             <AnimatedBlurReveal>

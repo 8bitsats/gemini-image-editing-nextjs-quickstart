@@ -49,6 +49,15 @@ Experience our latest innovation - a live art gallery ticker at the top of every
 - **Real-time Verification**: Instant wallet and balance checking
 - **Flexible Access**: Token holders + whitelist dual verification
 
+### 💬 **Ask the Dev Support System**
+- **Direct Developer Communication**: Submit questions, bug reports, and feature requests
+- **File Upload Support**: Attach screenshots, logs, and documents
+- **Admin Response System**: Real-time responses from development team
+- **Wallet-Based Authentication**: Secure request tracking via blockchain identity
+- **Category Management**: Organized request types (bugs, features, questions, feedback)
+- **Priority System**: Urgent, high, medium, and low priority levels
+- **Status Tracking**: Open, in progress, resolved, and closed request states
+
 ### 🎯 **Web3 Features**
 - **NFT Gallery**: Showcase and manage Solana NFTs
 - **NFT Minting**: Create and mint NFTs with SOL and $GOR payments
@@ -90,6 +99,9 @@ gemini-image-editing-nextjs-quickstart/
 ├── app/
 │   ├── api/                     # API routes
 │   │   ├── art-gallery/        # Realtime art gallery API
+│   │   ├── ask-the-dev/        # 🆕 Developer support system
+│   │   │   ├── route.ts        # User request submission & retrieval
+│   │   │   └── admin/          # Admin management endpoints
 │   │   ├── audio/              # Text-to-speech generation
 │   │   ├── chat-enhanced/      # Advanced AI chat with multimodal
 │   │   ├── document-analyze/   # PDF analysis and Q&A
@@ -105,6 +117,8 @@ gemini-image-editing-nextjs-quickstart/
 │   ├── ui/                    # shadcn/ui components
 │   ├── providers/             # Context providers
 │   │   └── SolanaProvider.tsx # Wallet connection setup
+│   ├── AdminDashboard.tsx     # 🆕 Admin support dashboard
+│   ├── AskTheDev.tsx          # 🆕 User support request form
 │   ├── AudioPlayer.tsx        # Audio playback component
 │   ├── ClientWalletButton.tsx # Wallet connection button
 │   ├── CodeGeneration.tsx     # AI code generation interface
@@ -161,6 +175,11 @@ GOOGLE_GENERATIVE_AI_API_KEY=your_google_ai_api_key
 # Solana Configuration  
 NEXT_PUBLIC_SOLANA_RPC_URL=https://mainnet.helius-rpc.com/?api-key=your_helius_key
 NEXT_PUBLIC_SOLANA_NETWORK=mainnet-beta
+
+# Supabase Configuration (for Ask the Dev feature)
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 
 # Site Configuration
 NEXT_PUBLIC_SITE_URL=http://localhost:3003
@@ -281,6 +300,116 @@ const artworkData = {
 ```
 
 ## 🎯 Feature Documentation
+
+### Ask the Dev Support System
+
+The Ask the Dev feature provides a comprehensive support system allowing users to communicate directly with developers through a secure, wallet-authenticated interface.
+
+#### User Interface (`/components/AskTheDev.tsx`)
+```typescript
+// Submit a support request
+const requestData = {
+  title: "Bug in image generation",
+  description: "Detailed description of the issue...",
+  category: "bug", // bug, feature, question, feedback, other
+  priority: "high", // low, medium, high, urgent
+  url: "https://example.com/relevant-page",
+  userWalletAddress: publicKey.toString()
+};
+
+// Include file attachments
+const formData = new FormData();
+formData.append('title', title);
+formData.append('description', description);
+files.forEach((file, index) => {
+  formData.append(`file_${index}`, file);
+});
+```
+
+#### Admin Dashboard (`/components/AdminDashboard.tsx`)
+```typescript
+// Fetch all user requests (admin only)
+const response = await fetch(`/api/ask-the-dev/admin?admin_wallet=${adminWallet}`);
+
+// Respond to a request
+const responseData = {
+  adminWallet: "BSg4ZyMunJKr585bUQTwQpigX4Em8iiCqVSHMxnZVz1u",
+  requestId: request.id,
+  responseText: "Thank you for the report. We'll fix this in the next update.",
+  updateStatus: "in_progress" // optional status update
+};
+```
+
+#### Database Schema
+```sql
+-- User requests with comprehensive tracking
+CREATE TABLE dev_requests (
+  id UUID PRIMARY KEY,
+  user_id UUID REFERENCES users(id),
+  user_wallet_address TEXT NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
+  category TEXT CHECK (category IN ('bug', 'feature', 'question', 'feedback', 'other')),
+  priority TEXT DEFAULT 'medium' CHECK (priority IN ('low', 'medium', 'high', 'urgent')),
+  status TEXT DEFAULT 'open' CHECK (status IN ('open', 'in_progress', 'resolved', 'closed')),
+  url TEXT,
+  metadata JSONB,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- File attachments support
+CREATE TABLE dev_request_files (
+  id UUID PRIMARY KEY,
+  request_id UUID REFERENCES dev_requests(id),
+  file_name TEXT NOT NULL,
+  file_url TEXT NOT NULL,
+  file_type TEXT NOT NULL,
+  file_size BIGINT
+);
+
+-- Admin responses with authentication
+CREATE TABLE dev_responses (
+  id UUID PRIMARY KEY,
+  request_id UUID REFERENCES dev_requests(id),
+  admin_wallet_address TEXT NOT NULL,
+  response_text TEXT NOT NULL,
+  is_admin BOOLEAN DEFAULT FALSE
+);
+```
+
+#### Security Features
+- **Wallet Authentication**: All requests tied to Solana wallet addresses
+- **Admin Authorization**: Only designated wallet (`BSg4ZyMunJKr585bUQTwQpigX4Em8iiCqVSHMxnZVz1u`) can access admin dashboard
+- **Row Level Security**: Database policies prevent unauthorized access
+- **File Upload Validation**: Secure file handling with type and size restrictions
+
+#### API Endpoints
+```typescript
+// Submit user request
+POST /api/ask-the-dev
+FormData: {
+  title, description, category, priority, url, userWalletAddress,
+  file_0, file_1, ... // file attachments
+}
+
+// Get user's requests
+GET /api/ask-the-dev?wallet=user_wallet_address
+
+// Admin: Get all requests
+GET /api/ask-the-dev/admin?admin_wallet=admin_address
+
+// Admin: Respond to request
+POST /api/ask-the-dev/admin
+Body: {
+  adminWallet, requestId, responseText, updateStatus?
+}
+
+// Admin: Update request status
+PATCH /api/ask-the-dev/admin
+Body: {
+  adminWallet, requestId, status
+}
+```
 
 ### AI Art Generation
 ```typescript
@@ -584,6 +713,15 @@ Multi-layer verification with wallet signatures and token validation
 Interactive voting, viewing, and social features for user-generated content
 
 ## 🆕 Latest Updates
+
+### Version 2.1 - Ask the Dev Support System
+- **💬 Direct Developer Communication**: Secure wallet-authenticated support requests
+- **📁 File Upload Support**: Attach screenshots, logs, and documents to requests
+- **🛡️ Admin Dashboard**: Comprehensive request management for developers
+- **🏷️ Category & Priority System**: Organized bug reports, feature requests, and feedback
+- **📊 Status Tracking**: Real-time request progress from open to resolved
+- **🔐 Blockchain Authentication**: All requests tied to Solana wallet addresses
+- **⚡ Real-time Responses**: Instant notification system for user-admin communication
 
 ### Version 2.0 - Realtime Art Gallery
 - **🎨 Live Art Feed**: Real-time artwork display ticker

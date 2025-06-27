@@ -213,3 +213,90 @@ CREATE POLICY "Users can view own search queries" ON search_queries
 
 CREATE POLICY "Users can create own search queries" ON search_queries
     FOR INSERT WITH CHECK (auth.uid()::text = user_id::text);
+
+-- Ask the Dev feature tables
+CREATE TABLE IF NOT EXISTS dev_requests (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    user_wallet_address TEXT NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    category TEXT NOT NULL CHECK (category IN ('bug', 'feature', 'question', 'feedback', 'other')),
+    priority TEXT DEFAULT 'medium' CHECK (priority IN ('low', 'medium', 'high', 'urgent')),
+    status TEXT DEFAULT 'open' CHECK (status IN ('open', 'in_progress', 'resolved', 'closed')),
+    url TEXT,
+    metadata JSONB,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS dev_request_files (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    request_id UUID REFERENCES dev_requests(id) ON DELETE CASCADE,
+    file_name TEXT NOT NULL,
+    file_url TEXT NOT NULL,
+    file_type TEXT NOT NULL,
+    file_size BIGINT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS dev_responses (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    request_id UUID REFERENCES dev_requests(id) ON DELETE CASCADE,
+    admin_wallet_address TEXT NOT NULL,
+    response_text TEXT NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Indexes for Ask the Dev feature
+CREATE INDEX IF NOT EXISTS idx_dev_requests_user_id ON dev_requests(user_id);
+CREATE INDEX IF NOT EXISTS idx_dev_requests_status ON dev_requests(status);
+CREATE INDEX IF NOT EXISTS idx_dev_requests_created_at ON dev_requests(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_dev_request_files_request_id ON dev_request_files(request_id);
+CREATE INDEX IF NOT EXISTS idx_dev_responses_request_id ON dev_responses(request_id);
+
+-- Triggers for updating updated_at
+CREATE TRIGGER update_dev_requests_updated_at BEFORE UPDATE ON dev_requests
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_dev_responses_updated_at BEFORE UPDATE ON dev_responses
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- RLS policies for Ask the Dev feature
+ALTER TABLE dev_requests ENABLE ROW LEVEL SECURITY;
+ALTER TABLE dev_request_files ENABLE ROW LEVEL SECURITY;
+ALTER TABLE dev_responses ENABLE ROW LEVEL SECURITY;
+
+-- Dev requests: users can view all requests but only create/update their own
+CREATE POLICY "Anyone can view dev requests" ON dev_requests
+    FOR SELECT USING (TRUE);
+
+CREATE POLICY "Users can create own dev requests" ON dev_requests
+    FOR INSERT WITH CHECK (auth.uid()::text = user_id::text);
+
+CREATE POLICY "Users can update own dev requests" ON dev_requests
+    FOR UPDATE USING (auth.uid()::text = user_id::text);
+
+-- Dev request files: users can view files for all requests but only upload to their own
+CREATE POLICY "Anyone can view dev request files" ON dev_request_files
+    FOR SELECT USING (TRUE);
+
+CREATE POLICY "Users can upload files to own requests" ON dev_request_files
+    FOR INSERT WITH CHECK (
+        EXISTS (
+            SELECT 1 FROM dev_requests 
+            WHERE id = request_id AND user_id::text = auth.uid()::text
+        )
+    );
+
+-- Dev responses: anyone can view, but only admins (specified wallet) can create
+CREATE POLICY "Anyone can view dev responses" ON dev_responses
+    FOR SELECT USING (TRUE);
+
+CREATE POLICY "Admins can create responses" ON dev_responses
+    FOR INSERT WITH CHECK (admin_wallet_address = 'BSg4ZyMunJKr585bUQTwQpigX4Em8iiCqVSHMxnZVz1u');
+
+CREATE POLICY "Admins can update own responses" ON dev_responses
+    FOR UPDATE USING (admin_wallet_address = 'BSg4ZyMunJKr585bUQTwQpigX4Em8iiCqVSHMxnZVz1u');
