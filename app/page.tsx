@@ -12,7 +12,9 @@ import { MusicGeneration } from "@/components/MusicGeneration";
 import { CodeGeneration } from "@/components/CodeGeneration";
 import { LiveVoiceChat } from "@/components/LiveVoiceChat";
 import { DocumentStudio } from "@/components/DocumentStudio";
-import { Trash2, Palette, Mic, Images as Gallery, Terminal, Video, Music, Code, Radio, FileText } from "lucide-react";
+import { DJBoothLauncher } from "@/components/DJBoothLauncher";
+import { NFTStudio } from "@/components/NFTStudio";
+import { Trash2, Palette, Mic, Images as Gallery, Terminal, Video, Music, Code, Radio, FileText, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -24,7 +26,7 @@ import { MobileLoadingAnimation } from "@/components/LoadingAnimation";
 import { motion } from "framer-motion";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<'ai-art' | 'trash-compactor' | 'text-to-audio' | 'nft-gallery' | 'ai-terminal' | 'video-generation' | 'music-generation' | 'code-generation' | 'live-voice-chat' | 'document-studio'>('ai-art');
+  const [activeTab, setActiveTab] = useState<'ai-art' | 'trash-compactor' | 'text-to-audio' | 'nft-gallery' | 'ai-terminal' | 'video-generation' | 'music-generation' | 'code-generation' | 'live-voice-chat' | 'document-studio' | 'nft-studio'>('ai-art');
   const [image, setImage] = useState<string | null>(null);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [description, setDescription] = useState<string | null>(null);
@@ -260,6 +262,15 @@ export default function Home() {
                     <span className="hidden sm:inline">Trash Compactor</span>
                     <span className="sm:hidden">Trash</span>
                   </Button>
+                  <Button
+                    variant={activeTab === 'nft-studio' ? 'default' : 'outline'}
+                    onClick={() => setActiveTab('nft-studio')}
+                    className="flex items-center justify-center gap-1 sm:gap-2 w-full sm:w-auto py-3 sm:py-2 text-xs sm:text-sm"
+                  >
+                    <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="hidden sm:inline">NFT Studio</span>
+                    <span className="sm:hidden">NFT</span>
+                  </Button>
                 </div>
               </div>
             </AnimatedBlurReveal>
@@ -347,6 +358,10 @@ export default function Home() {
             <AnimatedBlurReveal>
               <EnhancedGorbaganaTerminal />
             </AnimatedBlurReveal>
+          ) : activeTab === 'nft-studio' ? (
+            <AnimatedBlurReveal>
+              <NFTStudio />
+            </AnimatedBlurReveal>
           ) : (
             <AnimatedBlurReveal>
               <TrashCompactor />
@@ -355,6 +370,9 @@ export default function Home() {
         </CardContent>
       </Card>
       </div>
+      
+      {/* DJ Booth Launcher */}
+      <DJBoothLauncher />
     </main>
   );
 }
