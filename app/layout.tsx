@@ -4,7 +4,7 @@ import "./globals.css";
 import "./mobile.css";
 import "@solana/wallet-adapter-react-ui/styles.css";
 import { ThemeProviders } from "@/components/providers";
-import { SolanaProvider } from "@/components/providers/SolanaProvider";
+import { SolanaProviderWrapper } from "@/components/providers/SolanaProviderWrapper";
 import { TokenGate } from "@/components/TokenGate";
 import { GoogleSearch } from "@/components/GoogleSearch";
 import { VideoStream } from "@/components/VideoStream";
@@ -53,7 +53,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <ThemeProviders>
-          <SolanaProvider>
+          <SolanaProviderWrapper>
             <TokenGate>
               <TrendingTokensTicker />
               <RealtimeArtGallery />
@@ -64,7 +64,7 @@ export default function RootLayout({
               <GorbaganaComputerLauncher />
               <VoiceWidgetManager />
             </TokenGate>
-          </SolanaProvider>
+          </SolanaProviderWrapper>
           <Toaster />
         </ThemeProviders>
       </body>
