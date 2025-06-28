@@ -37,13 +37,20 @@ interface ExtendedGeneratedImage extends GeneratedImage {
     avatar_url?: string;
   };
   userVote?: 'upvote' | 'downvote' | null;
+  likes: number;
+  dislikes: number;
+  views: number;
+  imageUrl?: string;
+  isLive?: boolean;
+  creator?: string;
+  createdAt: number;
 }
 
 export function RealtimeArtGallery() {
   const [artworks, setArtworks] = useState<ExtendedGeneratedImage[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [userVotes, setUserVotes] = useState<Map<string, "upvote" | "downvote">>(new Map());
+  const [userVotes, setUserVotes] = useState<Map<string, "like" | "dislike">>(new Map());
   const [isVisible, setIsVisible] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [liveCount, setLiveCount] = useState(0);
@@ -56,7 +63,17 @@ export function RealtimeArtGallery() {
   // Fetch artworks from API
   const fetchArtworks = async () => {
     try {
-      const response = await fetch("/api/art-gallery?limit=20");
+      // Check if browser extensions are interfering
+      if (typeof window !== 'undefined' && (window as any).chrome?.runtime) {
+        console.warn('Browser extension detected, may interfere with API calls');
+      }
+      
+      const response = await fetch("/api/art-gallery?limit=20", {
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache'
+        }
+      });
       if (response.ok) {
         const data = await response.json();
         setArtworks(data.artworks || []);
@@ -64,6 +81,22 @@ export function RealtimeArtGallery() {
       }
     } catch (error) {
       console.error("Failed to fetch artworks:", error);
+      // Don't let extension errors break the component
+      if (error?.message?.includes('chrome-extension')) {
+        console.warn('Chrome extension interference detected, retrying...');
+        // Retry without cache
+        try {
+          const response = await fetch("/api/art-gallery?limit=20&t=" + Date.now());
+          if (response.ok) {
+            const data = await response.json();
+            setArtworks(data.artworks || []);
+            setLiveCount(data.stats?.liveArtworks || 0);
+            return;
+          }
+        } catch (retryError) {
+          console.error('Retry also failed:', retryError);
+        }
+      }
       setArtworks([]);
       setLiveCount(0);
     }
@@ -103,7 +136,7 @@ export function RealtimeArtGallery() {
   }, []);
 
   const handleVote = async (artworkId: string, voteType: "like" | "dislike") => {
-    const currentVote = userVotes.get(artworkId);
+    const currentVote = userVotes.get(artworkId) as "like" | "dislike" | undefined;
     
     try {
       const response = await fetch("/api/art-gallery", {
@@ -134,7 +167,7 @@ export function RealtimeArtGallery() {
             return newVotes;
           });
         } else {
-          setUserVotes(prev => new Map(prev.set(artworkId, voteType)));
+          setUserVotes(prev => new Map(prev.set(artworkId, voteType as "upvote" | "downvote")));
         }
       }
     } catch (error) {

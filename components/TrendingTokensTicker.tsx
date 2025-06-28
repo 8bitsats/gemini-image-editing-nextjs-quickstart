@@ -45,7 +45,17 @@ export function TrendingTokensTicker() {
   // Fetch trending tokens
   const fetchTrendingTokens = async () => {
     try {
-      const response = await fetch("/api/trending-tokens?limit=20");
+      // Check if browser extensions are interfering
+      if (typeof window !== 'undefined' && (window as any).chrome?.runtime) {
+        console.warn('Browser extension detected, may interfere with API calls');
+      }
+      
+      const response = await fetch("/api/trending-tokens?limit=20", {
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache'
+        }
+      });
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
@@ -56,6 +66,23 @@ export function TrendingTokensTicker() {
       }
     } catch (error) {
       console.error("Error fetching trending tokens:", error);
+      // Don't let extension errors break the component
+      if (error?.message?.includes('chrome-extension')) {
+        console.warn('Chrome extension interference detected, retrying...');
+        // Retry without cache
+        try {
+          const response = await fetch("/api/trending-tokens?limit=20&t=" + Date.now());
+          if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+              setTokens(data.data);
+              return;
+            }
+          }
+        } catch (retryError) {
+          console.error('Retry also failed:', retryError);
+        }
+      }
     } finally {
       setIsLoading(false);
     }

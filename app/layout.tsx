@@ -47,6 +47,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <script async src="https://cse.google.com/cse.js?cx=d2c18e59685a44e25"></script>
+        <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
       </head>
       <body
         className={`${openSans.className} antialiased bg-white dark:bg-slate-950`}

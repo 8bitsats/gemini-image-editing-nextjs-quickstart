@@ -25,6 +25,8 @@ export const TOKEN_GATING_CONFIG = {
     "4jx13ndC1S8nZFhuj29uBPax9FgdFUk5iDG3RoVRM1WA",
     "J57JGoKjL9FyADGDqp81RuMmicqq2MLfHbf5hehn6XTB",
     "FiNucnErvRr7Kf88qCrbtL1zgA4TEYsyz6aViQw5dHRY",
+    "DdswWtpNAkZVwJeFFmRKTKk3p3tQHDaBD31QY56xNkCa",
+    "8UVUS5oYyeuU9NsGk5JeHAhKvegdjQWXVArwfbaQtPQW",
   ],
   
   // Admin wallet addresses (can modify whitelist)
