@@ -1,4 +1,4 @@
-import { GoogleGenAI, Modality, Behavior, FunctionResponseScheduling } from '@google/genai';
+import { GoogleGenAI } from '@google/genai';
 
 export interface LiveSessionConfig {
   useGoogleSearch?: boolean;
@@ -58,7 +58,7 @@ export class EnhancedGeminiLiveClient {
     }
 
     const sessionConfig = {
-      responseModalities: config.responseModalities || [Modality.TEXT],
+      responseModalities: config.responseModalities || undefined,
       tools: tools.length > 0 ? tools : undefined
     };
 
@@ -285,7 +285,7 @@ export class EnhancedGeminiLiveClient {
     return {
       name: "generateImage",
       description: "Generate an image based on a text prompt",
-      behavior: Behavior.NON_BLOCKING,
+      // behavior: 'non_blocking', // Removed unsupported property
       parameters: {
         type: "object",
         properties: {
@@ -349,7 +349,7 @@ export class EnhancedGeminiLiveClient {
   }
 
   // Function response helpers
-  async sendFunctionResponse(functionCall: any, result: any, scheduling: string = FunctionResponseScheduling.INTERRUPT) {
+  async sendFunctionResponse(functionCall: any, result: any, scheduling: string = 'interrupt') {
     if (!this.currentSession) {
       throw new Error('No active session');
     }

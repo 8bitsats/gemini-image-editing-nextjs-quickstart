@@ -40,14 +40,15 @@ export async function GET(req: NextRequest) {
 
     const trendingData = await trendingResponse.json();
     
-    if (!trendingData.success || !trendingData.data?.items) {
+    if (!trendingData.success || !trendingData.data?.tokens) {
+      console.error("Invalid Birdeye API response:", trendingData);
       return NextResponse.json(
         { success: false, error: "Invalid response from Birdeye API" },
         { status: 500 }
       );
     }
 
-    const tokens = trendingData.data.items;
+    const tokens = trendingData.data.tokens;
     
     // Extract token addresses for metadata fetch
     const addresses = tokens.slice(0, 50).map((token: any) => token.address); // Max 50 addresses
@@ -111,6 +112,7 @@ export async function GET(req: NextRequest) {
       data: {
         updateTime: trendingData.data.updateTime,
         updateUnixTime: trendingData.data.updateUnixTime,
+        total: trendingData.data.total,
         tokens: tokensWithMetadata,
         count: tokensWithMetadata.length
       }

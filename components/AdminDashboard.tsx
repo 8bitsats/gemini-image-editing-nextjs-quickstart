@@ -22,7 +22,9 @@ import {
   RefreshCw
 } from "lucide-react";
 
-const ADMIN_WALLET = 'BSg4ZyMunJKr585bUQTwQpigX4Em8iiCqVSHMxnZVz1u';
+import { TOKEN_GATING_CONFIG } from '@/config/tokenGating';
+
+const ADMIN_WALLETS = TOKEN_GATING_CONFIG.ADMIN_WALLETS;
 
 interface DevRequest {
   id: string;
@@ -91,7 +93,7 @@ export function AdminDashboard() {
   const [isSubmittingResponse, setIsSubmittingResponse] = useState(false);
   const [showDetails, setShowDetails] = useState<string | null>(null);
 
-  const isAdmin = connected && publicKey?.toString() === ADMIN_WALLET;
+  const isAdmin = connected && publicKey?.toString() && ADMIN_WALLETS.includes(publicKey.toString());
 
   useEffect(() => {
     if (isAdmin) {

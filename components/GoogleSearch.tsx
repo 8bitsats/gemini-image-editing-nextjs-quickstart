@@ -102,11 +102,11 @@ export function GoogleSearch() {
         <div className="bg-background/80 backdrop-blur-sm rounded-lg border border-border/50 p-3 sm:p-4 shadow-sm">
           <div id="gcse-search-container" className="min-h-[60px]">
             <div className="gcse-search" 
-                 data-resultsUrl="/search-results" 
-                 data-newWindow="false" 
-                 data-autoSearchOnLoad="false"
-                 data-enableAutoComplete="true"
-                 data-enableHistory="true"></div>
+                 data-resultsurl="/search-results" 
+                 data-newwindow="false" 
+                 data-autosearchonload="false"
+                 data-enableautocomplete="true"
+                 data-enablehistory="true"></div>
           </div>
           
           {!isLoaded && retryCount > 0 && (

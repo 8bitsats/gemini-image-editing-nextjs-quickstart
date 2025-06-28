@@ -46,6 +46,7 @@ export function RealtimeArtGallery() {
   const [userVotes, setUserVotes] = useState<Map<string, "upvote" | "downvote">>(new Map());
   const [isVisible, setIsVisible] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const [liveCount, setLiveCount] = useState(0);
   
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const galleryRef = useRef<HTMLDivElement>(null);
@@ -63,20 +64,7 @@ export function RealtimeArtGallery() {
       }
     } catch (error) {
       console.error("Failed to fetch artworks:", error);
-      // Fallback to sample data
-      const sampleArtworks: ArtworkItem[] = [
-        {
-          id: "sample-1",
-          imageUrl: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjNjM2NmYxIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5BSSBBcnR3b3JrPC90ZXh0Pjwvc3ZnPg==",
-          prompt: "A mystical forest with glowing mushrooms",
-          createdAt: Date.now() - 300000,
-          creator: "Anonymous",
-          likes: 12,
-          dislikes: 2,
-          views: 45,
-        }
-      ];
-      setArtworks(sampleArtworks);
+      setArtworks([]);
       setLiveCount(0);
     }
   };

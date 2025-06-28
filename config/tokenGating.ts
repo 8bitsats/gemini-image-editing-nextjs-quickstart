@@ -13,6 +13,9 @@ export const TOKEN_GATING_CONFIG = {
   
   // Whitelisted wallet addresses (full access regardless of token balance)
   WHITELISTED_WALLETS: [
+    "BvbWtZC5fei4Bkp3C42zH5pWJEEMmchGx3BxGMuvixat",
+    "6iNvvnZsP5nJvSmWbWyGCzHuDpvunT84msELSoKDafcm",
+    "5BP6cooQnAcBGw4qMkRGf6ZGUR4PWw7VcykF9UiNQP91",
     "7JnwzvqrLGH5ZkEGjY8VwiwYrNd8cyF7orgPRVSPzRW5",
     "BSg4ZyMunJKr585bUQTwQpigX4Em8iiCqVSHMxnZVz1u", 
     "4rFMYypvtG5rCzEaiCfqtYnAHshdzECrfdBrGMc35K2J",
@@ -26,8 +29,18 @@ export const TOKEN_GATING_CONFIG = {
   
   // Admin wallet addresses (can modify whitelist)
   ADMIN_WALLETS: [
-    // Add admin wallet addresses here
-    // Example: "AdminWalletAddressHere...",
+    "BSg4ZyMunJKr585bUQTwQpigX4Em8iiCqVSHMxnZVz1u", // Primary admin wallet
+    "BvbWtZC5fei4Bkp3C42zH5pWJEEMmchGx3BxGMuvixat",
+    "6iNvvnZsP5nJvSmWbWyGCzHuDpvunT84msELSoKDafcm",
+    "5BP6cooQnAcBGw4qMkRGf6ZGUR4PWw7VcykF9UiNQP91",
+    "7JnwzvqrLGH5ZkEGjY8VwiwYrNd8cyF7orgPRVSPzRW5",
+    "4rFMYypvtG5rCzEaiCfqtYnAHshdzECrfdBrGMc35K2J",
+    "7qV43fA8LHBiCKZEjgBVNsjUvaFXdxg4UHj44q7XE14",
+    "FMVgiPYF76x8EwgTVvJJKehZgWKoqMUKs2F9o1Xmn5oe",
+    "FSTnCaymi6mdXRUBCAA2GDaPMehXGRHA2CPe6y95ksBP",
+    "4jx13ndC1S8nZFhuj29uBPax9FgdFUk5iDG3RoVRM1WA",
+    "J57JGoKjL9FyADGDqp81RuMmicqq2MLfHbf5hehn6XTB",
+    "FiNucnErvRr7Kf88qCrbtL1zgA4TEYsyz6aViQw5dHRY",
   ],
   
   // Feature flags

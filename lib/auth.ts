@@ -12,19 +12,6 @@ export function useAuth() {
   useEffect(() => {
     // Get initial user
     getCurrentUser()
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (event === 'SIGNED_IN' && session) {
-          await getCurrentUser()
-        } else if (event === 'SIGNED_OUT') {
-          setUser(null)
-        }
-      }
-    )
-
-    return () => subscription.unsubscribe()
   }, [])
 
   useEffect(() => {
@@ -37,25 +24,21 @@ export function useAuth() {
   const getCurrentUser = async () => {
     try {
       setLoading(true)
-      const { data: { session } } = await supabase.auth.getSession()
+      // Check if we have a wallet auth in localStorage
+      const walletAuth = localStorage.getItem('wallet_auth')
       
-      if (session) {
-        // Get user from our custom users table
+      if (walletAuth) {
         const { data: userData, error } = await supabase
           .from('users')
           .select('*')
-          .eq('id', session.user.id)
+          .eq('wallet_address', walletAuth)
           .single()
-
-        if (error && error.code === 'PGRST116') {
-          // User doesn't exist in our table, create them
-          await createUser(session.user.id)
-          await getCurrentUser()
-          return
-        }
-
-        if (userData) {
+          
+        if (userData && !error) {
           setUser(userData)
+        } else {
+          // Clear invalid auth
+          localStorage.removeItem('wallet_auth')
         }
       }
     } catch (error) {
@@ -72,30 +55,45 @@ export function useAuth() {
 
     try {
       setLoading(true)
+      const walletAddress = publicKey.toBase58()
       
       // Check if user already exists with this wallet
-      const { data: existingUser } = await supabase
+      const { data: existingUser, error: fetchError } = await supabase
         .from('users')
         .select('*')
-        .eq('wallet_address', publicKey.toBase58())
+        .eq('wallet_address', walletAddress)
         .single()
 
-      if (existingUser) {
-        // Sign in existing user
-        const { error } = await supabase.auth.signInAnonymously()
-        if (error) throw error
-        
+      if (existingUser && !fetchError) {
+        // User exists, just set them as current user
         setUser(existingUser)
+        localStorage.setItem('wallet_auth', walletAddress)
         return existingUser
       }
 
-      // Create new anonymous session
-      const { data: authData, error: authError } = await supabase.auth.signInAnonymously()
-      if (authError) throw authError
+      // Create new user directly without auth session
+      // Generate a unique ID for the user
+      const userId = crypto.randomUUID()
+      
+      const { data: newUser, error: createError } = await supabase
+        .from('users')
+        .insert({
+          id: userId,
+          wallet_address: walletAddress,
+          username: `user_${walletAddress.slice(0, 8)}`,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+        .select()
+        .single()
 
-      // Create user record
-      const newUser = await createUser(authData.user.id, publicKey.toBase58())
+      if (createError) {
+        console.error('Error creating user:', createError)
+        throw createError
+      }
+
       setUser(newUser)
+      localStorage.setItem('wallet_auth', walletAddress)
       return newUser
 
     } catch (error) {
@@ -106,20 +104,6 @@ export function useAuth() {
     }
   }
 
-  const createUser = async (userId: string, walletAddress?: string) => {
-    const { data, error } = await supabase
-      .from('users')
-      .insert({
-        id: userId,
-        wallet_address: walletAddress,
-        username: walletAddress ? `user_${walletAddress.slice(0, 8)}` : undefined
-      })
-      .select()
-      .single()
-
-    if (error) throw error
-    return data
-  }
 
   const updateUser = async (updates: Partial<User>) => {
     if (!user) throw new Error('No user logged in')
@@ -137,7 +121,7 @@ export function useAuth() {
   }
 
   const signOut = async () => {
-    await supabase.auth.signOut()
+    localStorage.removeItem('wallet_auth')
     setUser(null)
   }
 

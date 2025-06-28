@@ -9,20 +9,17 @@ import {
   TrendingUp, 
   TrendingDown,
   DollarSign,
-  Users,
   Activity,
-  BarChart3,
+  BarChart,
   ChevronLeft,
   ChevronRight,
-  Pause,
-  Play,
-  RefreshCw,
+  Square,
+  Play as PlayIcon,
+  RotateCcw,
   ExternalLink,
-  Eye,
-  EyeOff
+  Eye
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
 import { TrendingToken } from "@/lib/birdeye/client";
 import { TokenDetailsModal } from "./TokenDetailsModal";
 
@@ -129,7 +126,7 @@ export function TrendingTokensTicker() {
       <div className="w-full bg-gradient-to-r from-green-900 via-emerald-900 to-teal-900 border-b border-green-500/20 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 py-2">
           <div className="flex items-center justify-center text-white text-sm">
-            <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+            <RotateCcw className="w-4 h-4 mr-2 animate-spin" />
             Loading trending tokens...
           </div>
         </div>
@@ -154,7 +151,7 @@ export function TrendingTokensTicker() {
                 
                 <div className="flex items-center gap-4 text-xs text-green-200">
                   <div className="flex items-center gap-1">
-                    <BarChart3 className="w-3 h-3" />
+                    <BarChart className="w-3 h-3" />
                     <span>{tokens.count} Tokens</span>
                   </div>
                   <div className="flex items-center gap-1">
@@ -174,7 +171,7 @@ export function TrendingTokensTicker() {
                   onClick={togglePlayPause}
                   className="text-white hover:bg-white/10 h-7 w-7 p-0"
                 >
-                  {isPlaying ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
+                  {isPlaying ? <Square className="w-3 h-3" /> : <PlayIcon className="w-3 h-3" />}
                 </Button>
                 
                 <Button
@@ -183,7 +180,7 @@ export function TrendingTokensTicker() {
                   onClick={fetchTrendingTokens}
                   className="text-white hover:bg-white/10 h-7 w-7 p-0"
                 >
-                  <RefreshCw className="w-3 h-3" />
+                  <RotateCcw className="w-3 h-3" />
                 </Button>
                 
                 <Button
@@ -279,14 +276,14 @@ export function TrendingTokensTicker() {
                             {formatPrice(currentToken.price)}
                           </div>
                           <div className={`text-sm flex items-center gap-1 ${
-                            currentToken.priceChange24h >= 0 ? 'text-green-400' : 'text-red-400'
+                            (currentToken.priceChange24h || 0) >= 0 ? 'text-green-400' : 'text-red-400'
                           }`}>
-                            {currentToken.priceChange24h >= 0 ? (
+                            {(currentToken.priceChange24h || 0) >= 0 ? (
                               <TrendingUp className="w-3 h-3" />
                             ) : (
                               <TrendingDown className="w-3 h-3" />
                             )}
-                            {Math.abs(currentToken.priceChange24h).toFixed(2)}%
+                            {Math.abs(currentToken.priceChange24h || 0).toFixed(2)}%
                           </div>
                         </div>
 
@@ -294,26 +291,26 @@ export function TrendingTokensTicker() {
                         <div className="text-right">
                           <div className="text-green-200 text-xs">Volume 24h</div>
                           <div className="text-white font-semibold">
-                            ${formatNumber(currentToken.volume24h)}
+                            ${formatNumber(currentToken.volume24hUsd || 0)}
                           </div>
                         </div>
 
-                        {/* Market Cap */}
+                        {/* Volume 24h */}
                         <div className="text-right">
-                          <div className="text-green-200 text-xs">Market Cap</div>
+                          <div className="text-green-200 text-xs">Volume</div>
                           <div className="text-white font-semibold">
-                            ${formatNumber(currentToken.marketCap)}
+                            ${formatNumber(currentToken.volume24h || 0)}
                           </div>
                         </div>
 
-                        {/* Holders */}
+                        {/* Liquidity */}
                         <div className="text-right">
                           <div className="text-green-200 text-xs flex items-center gap-1">
-                            <Users className="w-3 h-3" />
-                            Holders
+                            <Activity className="w-3 h-3" />
+                            Liquidity
                           </div>
                           <div className="text-white font-semibold">
-                            {formatNumber(currentToken.holder)}
+                            ${formatNumber(currentToken.liquidity || 0)}
                           </div>
                         </div>
                       </div>

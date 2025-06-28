@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
+import { TOKEN_GATING_CONFIG } from '@/config/tokenGating';
 
-const ADMIN_WALLET = 'BSg4ZyMunJKr585bUQTwQpigX4Em8iiCqVSHMxnZVz1u';
+const ADMIN_WALLETS = TOKEN_GATING_CONFIG.ADMIN_WALLETS;
 
 function isAdminWallet(walletAddress: string): boolean {
-  return walletAddress === ADMIN_WALLET;
+  return ADMIN_WALLETS.includes(walletAddress);
 }
 
 export async function GET(request: NextRequest) {
